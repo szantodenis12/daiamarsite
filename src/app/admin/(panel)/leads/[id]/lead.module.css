@@ -1,0 +1,55 @@
+.headMeta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+
+.layout { display: grid; gap: 14px; }
+.column { display: grid; gap: 14px; align-content: start; min-width: 0; }
+@media (min-width: 1100px) { .layout { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); } }
+
+.stack { display: grid; gap: 12px; }
+.detailGrid { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 560px) { .detailGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.shortcuts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: -4px; }
+
+.activityForm { display: grid; gap: 10px; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--line-soft); }
+.activityTypes { display: flex; flex-wrap: wrap; gap: 6px; }
+.activityTypes label { display: inline-flex; align-items: center; padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; cursor: pointer; }
+.activityTypes input { position: absolute; opacity: 0; pointer-events: none; }
+.activityTypes label:has(input:checked) { border-color: var(--brand); background: var(--tint); color: var(--brand); font-weight: 600; }
+.activityTypes label:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; }
+.timeline li { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding-bottom: 16px; }
+.timeline li:not(:last-child)::before { content: ""; position: absolute; left: 13px; top: 28px; bottom: 2px; width: 1px; background: var(--line); }
+.dot { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; background: var(--tint); color: var(--brand); }
+.timeline li[data-type="status"] .dot { background: #e7ebf1; color: var(--navy); }
+.timeline li[data-type="start"] .dot { background: var(--line-soft); transform: scale(0.5); }
+.entryHead { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; font-size: 13px; padding-top: 4px; }
+.entryHead strong { font-weight: 600; }
+.entryHead span { color: var(--muted); font-size: 12px; }
+.entryText { margin-top: 2px; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.message { padding: 12px 14px; background: var(--bg); border-radius: 10px; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.duplicates { margin-bottom: 14px; padding: 16px 18px; border: 1px solid #ecd3c7; background: var(--warn-tint); border-radius: var(--radius-lg); }
+.duplicates h2 { color: var(--warn); margin-bottom: 4px; }
+.duplicates ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.duplicates li { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+.duplicates li a { font-weight: 600; color: var(--ink); }
+.duplicates form { margin: 0 0 0 auto; }
+
+.journeyCard { margin-top: 14px; }
+.journey { display: grid; gap: 12px; }
+@media (min-width: 900px) { .journey { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.step { padding: 14px; border: 1px solid var(--line-soft); border-radius: 12px; background: var(--bg); min-width: 0; }
+.stepTitle { font-size: 12px; font-weight: 600; color: var(--brand); margin-bottom: 10px; }
+.step dl div { grid-template-columns: 104px minmax(0, 1fr); }
+
+.dangerZone { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); }
+.spaced { margin-top: 14px; }
+.headActions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.offers { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.offers li { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 14px; }
+.offers a { font-weight: 600; color: var(--brand); }
+.files { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.files li { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 14px; }
+.files li a { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--brand); overflow-wrap: anywhere; }
+.files form { margin: 0 0 0 auto; }

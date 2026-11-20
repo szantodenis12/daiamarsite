@@ -1,0 +1,58 @@
+.page { min-height: 100vh; padding: 24px 16px 48px; background: #f5f7fa; color: #0f1b2d; font-family: var(--font-sans, system-ui, sans-serif); line-height: 1.5; }
+.sheet { max-width: 760px; margin: 0 auto; padding: 24px 20px; background: #fff; border: 1px solid #e3e8ef; border-radius: 16px; box-shadow: 0 1px 2px rgba(15, 27, 45, 0.04), 0 16px 40px -24px rgba(15, 27, 45, 0.25); }
+@media (min-width: 720px) { .page { padding-top: 48px; } .sheet { padding: 40px 44px; } }
+
+.head { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; justify-content: space-between; padding-bottom: 18px; border-bottom: 2px solid #245482; }
+.head img { max-width: 100%; height: auto; }
+.meta { display: grid; justify-items: end; font-size: 13px; color: #5b6676; }
+.meta strong { font-size: 18px; color: #0f2742; letter-spacing: -0.01em; }
+.meta span:first-child { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #245482; }
+
+.banner, .bannerOk { margin: 18px 0 0; padding: 10px 14px; border-radius: 10px; font-size: 14px; background: #fbefe9; color: #b4532a; }
+.bannerOk { background: #e9f1f9; color: #245482; font-weight: 600; }
+
+.title { margin: 22px 0 0; font-size: clamp(22px, 4vw, 30px); font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; color: #0f2742; }
+.intro { margin: 10px 0 0; color: #3d4756; white-space: pre-wrap; }
+
+.section { margin-top: 24px; }
+.section h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: #245482; }
+.items { list-style: none; margin: 0; padding: 0; border-top: 1px solid #e3e8ef; }
+.items li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; padding: 12px 0; border-bottom: 1px solid #eef1f5; }
+.items strong { font-weight: 600; }
+.items p { margin: 0; font-size: 13px; color: #5b6676; }
+.qty { grid-column: 1; font-size: 13px; color: #5b6676; font-variant-numeric: tabular-nums; }
+.value { grid-column: 2; grid-row: 1; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.totals { display: grid; gap: 10px; margin-top: 20px; }
+@media (min-width: 560px) { .totals { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }
+.totals div { display: grid; gap: 2px; padding: 14px 16px; border-radius: 12px; background: #0f2742; color: #fff; }
+.totals span { font-size: 13px; opacity: 0.75; }
+.totals strong { font-size: 22px; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.totals small { font-size: 12px; opacity: 0.7; }
+
+.validity { margin: 16px 0 0; font-weight: 600; color: #245482; }
+.note { margin: 8px 0 0; font-size: 14px; color: #3d4756; white-space: pre-wrap; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.primary, .secondary { display: inline-flex; gap: 8px; align-items: center; justify-content: center; min-height: 46px; padding: 10px 18px; border-radius: 12px; font: inherit; font-size: 15px; font-weight: 600; text-decoration: none; cursor: pointer; border: 1px solid transparent; }
+.primary { background: #245482; color: #fff; width: 100%; }
+.primary:hover { background: #1b4269; }
+.primary:disabled { opacity: 0.6; cursor: progress; }
+.secondary { background: #fff; color: #0f2742; border-color: #e3e8ef; }
+.secondary:hover { border-color: #c9d2de; }
+.primary:focus-visible, .secondary:focus-visible, .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid #0095eb; outline-offset: 2px; }
+
+.acceptBox { margin-top: 24px; padding: 18px; border-radius: 14px; background: #e9f1f9; }
+.acceptBox h2 { margin: 0; font-size: 18px; font-weight: 650; color: #0f2742; }
+.acceptBox > p { margin: 4px 0 0; font-size: 14px; color: #3d4756; }
+.accept { display: grid; gap: 10px; margin-top: 14px; }
+.field { display: grid; gap: 4px; font-size: 13px; font-weight: 500; }
+.field input, .field textarea { width: 100%; min-height: 44px; padding: 9px 12px; border: 1px solid #cfdcea; border-radius: 10px; font: inherit; font-size: 15px; background: #fff; color: #0f1b2d; }
+.error { margin: 0; color: #b4532a; font-size: 14px; }
+.done { display: flex; gap: 8px; align-items: center; margin: 12px 0 0; font-weight: 600; color: #245482; }
+
+.footer { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 28px; padding-top: 16px; border-top: 1px solid #e3e8ef; font-size: 13px; color: #5b6676; }
+.footer a { display: inline-flex; gap: 5px; align-items: center; color: #245482; text-decoration: none; }
+
+.spin { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

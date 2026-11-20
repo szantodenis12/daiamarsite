@@ -1,0 +1,20 @@
+.quick { display: flex; flex-wrap: wrap; gap: 6px; }
+.action {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: 1px solid #e3e8ef;
+  background: #fff;
+  color: #245482;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.action:hover { background: #e9f1f9; border-color: #cfe0f1; }
+.quick[data-compact] .action { min-height: 32px; padding: 5px 9px; font-size: 13px; }
+@media (max-width: 520px) {
+  .quick[data-compact] .action span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}

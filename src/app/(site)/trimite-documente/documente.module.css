@@ -1,0 +1,20 @@
+.grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(24px, 5vw, 64px); align-items: start; padding-block: clamp(32px, 4vw, 56px) clamp(40px, 5vw, 64px); }
+.formCard { composes: surface from "../../../components/ui/surfaces.module.css"; padding: clamp(24px, 3vw, 40px); box-shadow: 0 2px 6px rgba(15, 27, 45, 0.06), 0 30px 56px -28px rgba(15, 27, 45, 0.4); }
+.formCard h2 { font-size: clamp(26px, 3vw, 34px); margin-bottom: 8px; }
+.formCard > p { color: var(--muted); margin-bottom: 22px; }
+
+.aside { display: grid; gap: 20px; }
+.points { composes: surface from "../../../components/ui/surfaces.module.css"; display: grid; gap: 20px; padding: clamp(24px, 3vw, 32px); background: var(--bg-soft); }
+.points li { display: flex; gap: 14px; align-items: flex-start; }
+.points li > span:last-child { display: grid; gap: 4px; }
+.points strong { font-size: 16px; }
+.points small { font-size: 15px; color: var(--muted); line-height: 1.5; }
+.tile { composes: tile from "../../../components/ui/surfaces.module.css"; width: 48px; height: 48px; border-radius: 15px; }
+.tile svg { width: 22px; height: 22px; }
+.note { padding: 0 6px; color: var(--muted); font-size: 15px; }
+.note a { color: var(--ink); font-weight: 600; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; text-decoration: none; transition: background-size 0.4s var(--ease), color 0.2s; }
+@media (hover: hover) { .note a:hover { color: var(--brand); background-size: 100% 1px; } }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}

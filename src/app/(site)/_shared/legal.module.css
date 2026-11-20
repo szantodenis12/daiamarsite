@@ -1,0 +1,31 @@
+.doc { max-width: 760px; padding-top: clamp(40px, 6vw, 64px); font-size: 17px; line-height: 1.7; }
+.doc h2 { font-size: clamp(23px, 2.8vw, 32px); margin: 52px 0 16px; }
+.doc h3 { font-size: 19px; margin: 0 0 12px; }
+.doc p { margin-bottom: 14px; }
+.doc ul { margin: 0 0 16px; display: grid; gap: 8px; }
+.doc li { padding: 10px 16px 10px 40px; background: var(--bg-soft); border: 1px solid var(--line-soft); border-radius: 12px; position: relative; line-height: 1.6; }
+.doc li::before { content: ""; position: absolute; left: 16px; top: 17px; width: 9px; height: 9px; border-radius: 999px; background: var(--brand); }
+.doc a { color: var(--brand); background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; text-decoration: none; transition: background-size 0.4s var(--ease); }
+@media (hover: hover) { .doc a:hover { background-size: 100% 1px; } }
+.meta { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+.block { margin: 0 0 14px; padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow-rest); }
+.block dl { margin: 0; display: grid; gap: 10px; }
+.block dl div { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 12px; font-size: 16px; }
+.block dt { font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.block dd { margin: 0; }
+.note { margin: 14px 0 0 !important; padding: 12px 14px; background: var(--tint); border-radius: 10px; font-size: 15px; color: var(--ink); }
+
+.table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 15px; }
+.table th, .table td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table th { font-size: 12.5px; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.table code { font-family: var(--font-mono); font-size: 14px; }
+
+@media (max-width: 600px) {
+  .block dl div { grid-template-columns: 1fr; gap: 2px; }
+  .table, .table thead, .table tbody, .table tr, .table th, .table td { display: block; }
+  .table thead { display: none; }
+  .table tr { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .table td { border: 0; padding: 2px 0; }
+  .table td::before { content: attr(data-label) ": "; font-size: 12.5px; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+}

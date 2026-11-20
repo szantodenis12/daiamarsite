@@ -1,0 +1,54 @@
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 5vw, 64px);
+  align-items: start;
+  padding-top: clamp(32px, 4vw, 56px);
+}
+
+.tile { composes: tile from "../../../components/ui/surfaces.module.css"; width: 48px; height: 48px; border-radius: 15px; }
+@media (hover: hover) { .row:hover .tile { transform: scale(1.06); } }
+.tile svg { width: 22px; height: 22px; }
+
+.sheet { composes: surface from "../../../components/ui/surfaces.module.css"; background: var(--bg-soft); padding: clamp(24px, 3vw, 36px); display: grid; gap: 4px; }
+.row { display: grid; grid-template-columns: 48px 1fr; gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); align-items: start; }
+.row:first-of-type { border-top: 0; padding-top: 4px; }
+.label { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); }
+.value { display: grid; gap: 4px; margin-top: 4px; font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+.value a { text-decoration: none; transition: color 0.2s; }
+@media (hover: hover) { .value a:hover { color: var(--brand); } }
+.small { font-size: 15px; font-weight: 400; color: var(--muted); }
+
+.callback { composes: surface from "../../../components/ui/surfaces.module.css"; margin-top: 10px; padding: 24px; display: grid; gap: 6px; }
+.callback h2 { font-size: 20px; }
+.callback > p { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
+
+.form { scroll-margin-top: calc(var(--header-h) + 24px); display: grid; gap: 16px; }
+.formCard { composes: surface from "../../../components/ui/surfaces.module.css"; padding: clamp(24px, 3vw, 40px); box-shadow: 0 2px 6px rgba(15, 27, 45, 0.06), 0 30px 56px -28px rgba(15, 27, 45, 0.4); }
+.formCard h2 { font-size: clamp(26px, 3vw, 34px); margin-bottom: 8px; }
+.formCard > p { color: var(--muted); margin-bottom: 22px; }
+
+.docsLink {
+  composes: flip from "../../../components/ui/surfaces.module.css";
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+}
+.docsLink > span:nth-child(2) { display: grid; gap: 2px; }
+.docsLink strong { font-size: 17px; font-weight: 700; }
+.docsLink small { font-size: 14px; color: var(--fg-muted); transition: color 0.35s; }
+.docsChip { composes: chip from "../../../components/ui/surfaces.module.css"; }
+
+.mapSection { padding-top: clamp(32px, 4vw, 56px); }
+
+.section { padding-top: clamp(40px, 5vw, 64px); }
+.section h2 { font-size: var(--fs-h2); margin-top: 16px; max-width: 18ch; }
+.cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 80px); align-items: start; }
+.reviews { margin-top: 28px; }
+.reviews h2 { font-size: 22px; margin-top: 0; }
+
+@media (max-width: 900px) {
+  .grid, .cols { grid-template-columns: 1fr; }
+}

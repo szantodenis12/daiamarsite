@@ -1,0 +1,72 @@
+.floating {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 55;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 20px 0 16px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--shadow-chip);
+  transition: background 0.2s, transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+@media (hover: hover) { .floating:hover { background: var(--brand); transform: translateY(-2px); } }
+.floating:active { transform: scale(0.98); }
+.floating:focus-visible, .barItem:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.floating svg { width: 22px; height: 22px; }
+
+.bar {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 55;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  transition: opacity 0.2s, visibility 0.2s;
+}
+/* Open mobile menu (HeaderMenu sets data-open="true" on #meniu-mobil): hide the bar so the menu's language links stay tappable. */
+:global(body:has(#meniu-mobil[data-open="true"])) .bar {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.barItem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.barItem svg { width: 18px; height: 18px; color: var(--brand); }
+.barItem:active { transform: scale(0.97); }
+.barPrimary { background: var(--navy); color: #fff; border-color: var(--navy); }
+.barPrimary svg { color: #fff; }
+
+@media (max-width: 768px) {
+  .floating { display: none; }
+  .bar { display: grid; }
+}
+@media (max-width: 360px) {
+  .barItem { font-size: 13.5px; gap: 6px; }
+}

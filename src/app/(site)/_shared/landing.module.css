@@ -1,0 +1,47 @@
+.heroBand { background: var(--bg-soft); }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: start;
+  padding-block: clamp(32px, 4vw, 56px) clamp(48px, 7vw, 88px);
+}
+.hero h1 { font-size: clamp(38px, 5.2vw, 72px); line-height: 1.03; letter-spacing: -0.035em; margin-top: 18px; }
+.sub { font-size: clamp(22px, 2.6vw, 32px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; color: var(--brand); margin-top: 10px; }
+.intro { max-width: 56ch; margin-top: 22px; font-size: 18px; color: var(--muted); }
+.phones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.phone { composes: btn phoneBtn dark from "../../../components/ui/ui.module.css"; font-variant-numeric: tabular-nums; }
+.nap { margin-top: 20px; font-size: 15px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.nap a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; text-decoration: none; transition: background-size 0.4s var(--ease); }
+@media (hover: hover) { .nap a:hover { background-size: 100% 1px; } }
+
+.formCard { composes: surface from "../../../components/ui/surfaces.module.css"; padding: clamp(24px, 3vw, 36px); box-shadow: 0 2px 6px rgba(15, 27, 45, 0.06), 0 30px 56px -28px rgba(15, 27, 45, 0.4); }
+.formCard h2 { font-size: 24px; }
+.formCard > p { color: var(--muted); margin: 8px 0 20px; font-size: 15px; }
+
+.section { padding-top: clamp(40px, 5vw, 64px); }
+.section h2 { font-size: var(--fs-h2); max-width: 18ch; }
+.lede { color: var(--muted); font-size: 17px; margin-top: 12px; max-width: 56ch; }
+
+.panel { composes: navy from "../../../components/ui/surfaces.module.css"; margin-top: 32px; background: var(--navy); color: #fff; border-radius: var(--radius-lg); padding: clamp(24px, 3vw, 40px); display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 32px; }
+.item { display: grid; grid-template-columns: 52px 1fr; gap: 14px; align-items: start; }
+.icon { width: 52px; height: 52px; border-radius: 16px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.16); display: grid; place-items: center; transition: background 0.3s var(--ease), color 0.3s var(--ease), transform 0.5s var(--ease); }
+@media (hover: hover) { .item:hover .icon { background: #fff; color: var(--navy); transform: scale(1.06); } }
+.item strong { display: block; font-size: 17px; margin-bottom: 4px; }
+.item p { color: rgba(255, 255, 255, 0.72); font-size: 15px; }
+
+.steps { margin-top: 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.step { composes: pane from "../../../components/ui/surfaces.module.css"; padding: 28px; display: grid; gap: 10px; align-content: start; justify-items: start; }
+.stepNo { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 17px; background: linear-gradient(150deg, #3470a8 0%, #245482 55%, #1c436a 100%); color: #fff; font-weight: 700; font-size: 19px; margin-bottom: 8px; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.28) inset, 0 10px 18px -10px rgba(36, 84, 130, 0.75); }
+.step strong { font-size: 20px; letter-spacing: -0.015em; }
+.step p { color: var(--muted); font-size: 15.5px; }
+
+.note { box-shadow: var(--shadow-rest); margin-top: 24px; padding: 18px 22px; border-left: 3px solid var(--brand); background: var(--tint); border-radius: 0 12px 12px 0; max-width: 64ch; }
+
+.cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 80px); align-items: start; }
+.cols h2 { margin-top: 16px; }
+
+@media (max-width: 900px) {
+  .hero, .panel, .steps, .cols { grid-template-columns: 1fr; }
+  .section h2 { max-width: none; }
+}

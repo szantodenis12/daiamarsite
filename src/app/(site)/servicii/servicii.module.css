@@ -1,0 +1,126 @@
+.group { padding-top: clamp(48px, 6vw, 80px); }
+.groupHead { display: grid; gap: 14px; justify-items: start; max-width: 720px; margin-bottom: 32px; }
+.groupHead h2 { font-size: clamp(30px, 3.9vw, 50px); }
+.groupHead p { color: var(--muted); }
+
+.tile { composes: tile from "../../../components/ui/surfaces.module.css"; }
+
+.cards { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.card {
+  composes: flip from "../../../components/ui/surfaces.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: 28px 28px 22px;
+}
+.card h3 { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; margin-top: 14px; }
+.card p { color: var(--fg-muted); font-size: 15.5px; transition: color 0.35s; }
+.cardMore {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--brand);
+  transition: color 0.35s, border-color 0.35s;
+}
+.cardChip { composes: chip from "../../../components/ui/surfaces.module.css"; }
+@media (hover: hover) { .card:hover .cardMore { color: #fff; border-color: rgba(255, 255, 255, 0.2); } }
+
+.control { composes: navy from "../../../components/ui/surfaces.module.css"; padding: clamp(28px, 5vw, 56px); background: var(--navy); color: #fff; border-radius: var(--radius-lg); }
+.control .groupHead p { color: rgba(255, 255, 255, 0.72); }
+.control .card { --sweep-bg: #fff; --fg: #fff; --fg-muted: rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.16); box-shadow: none; }
+@media (hover: hover) {
+  .control .card:hover { --fg: var(--navy); --fg-muted: var(--muted); border-color: #fff; box-shadow: 0 30px 50px -26px rgba(0, 0, 0, 0.7); }
+  .control .card:hover .cardMore { color: var(--brand); border-color: var(--line); }
+  .control .card:hover .tile { background: linear-gradient(150deg, #3470a8, #1c436a); color: #fff; }
+  .control .card:hover .chip { background: var(--brand); color: #fff; border-color: var(--brand); }
+}
+.control .card:focus-visible { outline-color: #fff; }
+.control .cardMore { color: #fff; border-color: rgba(255, 255, 255, 0.16); }
+.control .tile { background: rgba(255, 255, 255, 0.14); color: #fff; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset; }
+.control .chip { background: rgba(255, 255, 255, 0.12); color: #fff; border-color: rgba(255, 255, 255, 0.22); }
+
+.rows { display: grid; gap: 16px; }
+.row {
+  composes: flip from "../../../components/ui/surfaces.module.css";
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 22px;
+}
+.row strong { font-weight: 700; font-size: 18px; letter-spacing: -0.015em; display: block; }
+.row span span { color: var(--fg-muted); font-size: 15px; display: block; transition: color 0.35s; }
+.rowArrow { composes: chip from "../../../components/ui/surfaces.module.css"; }
+
+.angle {
+  composes: navy from "../../../components/ui/surfaces.module.css";
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: clamp(28px, 5vw, 56px);
+  margin-top: clamp(32px, 4vw, 56px);
+  background: var(--navy);
+  color: #fff;
+  border-radius: var(--radius-lg);
+}
+.angle h2 { font-size: clamp(28px, 3.9vw, 48px); max-width: 18ch; }
+.angle p { max-width: 62ch; color: rgba(255, 255, 255, 0.78); font-size: 17px; }
+
+.layout { display: grid; gap: 48px; margin-top: clamp(32px, 4vw, 56px); }
+@media (min-width: 1000px) {
+  .layout { grid-template-columns: minmax(0, 1fr) 380px; gap: 64px; align-items: start; }
+  .aside { position: sticky; top: calc(var(--header-h) + 24px); }
+}
+
+.main { display: grid; gap: clamp(48px, 6vw, 72px); min-width: 0; }
+.section { display: grid; gap: 20px; }
+.section h2 { font-size: clamp(26px, 3.2vw, 38px); }
+
+.docs { display: grid; gap: 16px; }
+.doc { composes: pane from "../../../components/ui/surfaces.module.css"; padding: 28px 28px 24px; }
+.doc h3 { font-size: 19px; margin-bottom: 8px; }
+.docNote { color: var(--muted); font-size: 15px; margin-bottom: 14px; }
+.doc .list li { padding: 10px 0; }
+.doc .list li:first-child { padding-top: 4px; }
+.doc .list li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.list { display: grid; }
+.list li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.list li:last-child { border-bottom: 0; }
+.list svg { width: 24px; height: 24px; padding: 5px; border-radius: 999px; background: var(--tint); color: var(--brand); margin-top: 1px; }
+
+.steps { display: grid; gap: 14px; }
+.step { composes: pane from "../../../components/ui/surfaces.module.css"; display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 18px; padding: 24px; }
+.stepNo { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(150deg, #3470a8 0%, #245482 55%, #1c436a 100%); color: #fff; font-weight: 700; font-size: 18px; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.28) inset, 0 10px 18px -10px rgba(36, 84, 130, 0.75); }
+.steps h3 { font-size: 19px; margin-bottom: 6px; }
+.steps p { color: var(--muted); font-size: 15.5px; }
+@media (min-width: 720px) { .steps { grid-template-columns: 1fr 1fr; } }
+
+.aside { display: grid; gap: 16px; }
+.contact { composes: surface from "../../../components/ui/surfaces.module.css"; display: grid; gap: 16px; padding: 28px; background: var(--bg-soft); }
+.contact h2 { font-size: 24px; }
+.contact p { color: var(--muted); font-size: 15px; }
+.phones { display: grid; gap: 8px; }
+.phones a { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 19px; text-decoration: none; }
+.phones a { transition: color 0.2s; }
+@media (hover: hover) { .phones a:hover { color: var(--brand); } }
+.phones svg { width: 18px; height: 18px; color: var(--brand); }
+
+.related { composes: surface from "../../../components/ui/surfaces.module.css"; display: grid; gap: 4px; padding: 26px 22px 14px 28px; }
+.related h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.related a { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 64px; padding: 10px 0; border-top: 1px solid var(--line); text-decoration: none; font-weight: 700; font-size: 16px; transition: color 0.25s; }
+@media (hover: hover) { .related a:hover { color: var(--brand); } }
+.related svg { width: 40px; height: 40px; padding: 11px; flex: none; border-radius: 999px; background: var(--tint); color: var(--brand); border: 1px solid rgba(36, 84, 130, 0.14); transition: transform 0.55s var(--ease), background 0.35s, color 0.35s; }
+@media (hover: hover) { .related a:hover svg { background: var(--brand); color: #fff; border-color: var(--brand); transform: rotate(-45deg); } }
+
+@media (max-width: 600px) {
+  .row { grid-template-columns: 52px minmax(0, 1fr) 40px; gap: 14px; padding: 16px; }
+  .doc { padding: 20px; }
+}

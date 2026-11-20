@@ -1,0 +1,4 @@
+.wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.label { font-size: 14px; color: var(--muted); }
+.list { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.flag { display: block; width: 24px; height: 24px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 1px rgba(15, 27, 45, 0.12); }

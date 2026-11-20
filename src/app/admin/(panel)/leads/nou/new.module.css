@@ -1,0 +1,6 @@
+.sources { grid-column: 1 / -1; display: grid; gap: 10px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chipOption { display: inline-flex; gap: 6px; align-items: center; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 14px; cursor: pointer; }
+.chipOption input { accent-color: var(--brand); margin: 0; }
+.chipOption:has(input:checked) { border-color: var(--brand); background: var(--tint); color: var(--brand); font-weight: 600; }
+.form { display: grid; gap: 18px; max-width: 760px; }

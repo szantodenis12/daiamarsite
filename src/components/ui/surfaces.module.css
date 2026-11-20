@@ -1,0 +1,86 @@
+/* Navy blocks: a very faint brand-blue light and a fine static grain, both behind the content (decorative only). */
+.navy { position: relative; isolation: isolate; }
+.navy::before,
+.navy::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; }
+.navy::before {
+  background:
+    radial-gradient(60% 90% at 90% 0%, rgba(74, 134, 196, 0.2), transparent 65%),
+    radial-gradient(45% 70% at 0% 100%, rgba(36, 84, 130, 0.28), transparent 70%);
+}
+.navy::after {
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Card system. .pane = static card, .flip = linked card that fills navy on hover (sweep layer, transform only).
+   Children read --fg / --fg-muted so text flips with the card. */
+.surface {
+  --fg: var(--ink);
+  --fg-muted: var(--muted);
+  position: relative;
+  color: var(--fg);
+  background: #fff;
+  border: 1px solid rgba(15, 27, 45, 0.09);
+  border-radius: 24px;
+  box-shadow: 0 1px 0 #fff inset, 0 2px 4px rgba(15, 27, 45, 0.04), 0 22px 40px -24px rgba(15, 27, 45, 0.26);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), border-color 0.3s, color 0.35s;
+}
+/* .pane adds the hover lift for cards that are not links. */
+.pane { composes: surface; }
+@media (hover: hover) {
+  .pane:hover { transform: translateY(-4px); border-color: rgba(36, 84, 130, 0.5); box-shadow: 0 2px 4px rgba(15, 27, 45, 0.06), 0 30px 50px -26px rgba(36, 84, 130, 0.45); }
+}
+.flip {
+  composes: pane;
+  --sweep-bg: linear-gradient(160deg, #1a4068 0%, #0f2742 70%);
+  isolation: isolate;
+  overflow: hidden;
+  text-decoration: none;
+}
+.flip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--sweep-bg);
+  transform: translateY(101%);
+  transition: transform 0.6s var(--ease);
+}
+.flip:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
+.flip:active { transform: translateY(-1px) scale(0.99); transition-duration: 0.12s; }
+@media (hover: hover) {
+  .flip:hover { --fg: #fff; --fg-muted: rgba(255, 255, 255, 0.78); border-color: var(--navy); transform: translateY(-6px); box-shadow: 0 2px 4px rgba(15, 27, 45, 0.1), 0 36px 56px -26px rgba(15, 39, 66, 0.6); }
+  .flip:hover::before { transform: none; }
+  .flip:hover .tile { background: #fff; color: var(--brand); box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.4); }
+  .flip:hover .chip { background: #fff; color: var(--navy); border-color: #fff; transform: rotate(-45deg); }
+}
+
+/* Icon tile: brand-filled square with a white icon. */
+.tile {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 17px;
+  background: linear-gradient(150deg, #3470a8 0%, #245482 55%, #1c436a 100%);
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.28) inset, 0 10px 18px -10px rgba(36, 84, 130, 0.75);
+  transition: background 0.35s var(--ease), color 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.5s var(--ease);
+}
+.tile svg { width: 26px; height: 26px; }
+@media (hover: hover) { .pane:hover .tile { transform: scale(1.06); } }
+
+/* Arrow chip: small circle holding the arrow, rotates -45 degrees when the card is hovered. */
+.chip {
+  flex: none;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  padding: 11px;
+  border-radius: 999px;
+  background: var(--tint);
+  color: var(--brand);
+  border: 1px solid rgba(36, 84, 130, 0.14);
+  transition: transform 0.55s var(--ease), background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s;
+}

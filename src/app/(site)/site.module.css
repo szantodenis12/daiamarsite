@@ -1,0 +1,2 @@
+/* --bar-h is 0 on desktop and the call bar's height on phones (globals.css), so the footer is never covered. */
+.page { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); }

@@ -1,0 +1,25 @@
+/node_modules
+/.next*/
+/out/
+/build
+/coverage
+/.data/
+/.vercel
+/_shots/
+
+.env*
+!.env.example
+
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+*.pem
+npm-debug.log*
+
+# The parent repo ignores *.png and *.jpg; the site needs its images (logo, icon, OG image).
+!*.png
+!*.jpg
+.vercel
+
+.dev-server.log
+*.log

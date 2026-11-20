@@ -1,0 +1,18 @@
+.pxFrame { position: relative; overflow: hidden; }
+.pxInner { position: absolute; left: 0; right: 0; }
+
+/* TextReveal. Each word sits in a clipping mask; the padding/negative margin pair keeps descenders and diacritics from being cut. */
+.word { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.18em 0.04em 0.22em; margin: -0.18em -0.04em -0.22em; }
+.inner { display: inline-block; will-change: auto; }
+
+/* Hero mode: CSS keyframes on load, no JS needed. */
+.tr[data-mode="load"] .inner { animation: wordUp 0.65s var(--ease) both; animation-delay: calc(var(--td, 0ms) + var(--i) * 28ms); }
+@keyframes wordUp { from { transform: translateY(105%); } to { transform: none; } }
+
+/* In-view mode: hidden state exists only once the page script has run. */
+:global(html.js) .tr[data-mode="inView"] .inner { transform: translateY(105%); transition: transform 0.85s var(--ease); transition-delay: calc(var(--td, 0ms) + var(--i) * 50ms); }
+:global(html.js) .tr[data-mode="inView"][data-shown="true"] .inner { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tr .inner { animation: none !important; transform: none !important; transition: none !important; }
+}

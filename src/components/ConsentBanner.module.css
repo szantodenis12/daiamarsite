@@ -1,0 +1,58 @@
+.banner {
+  position: fixed;
+  z-index: 60;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + var(--bar-h) + env(safe-area-inset-bottom));
+  max-width: 460px;
+  padding: 20px 22px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-chip);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.text a { color: var(--brand); }
+
+.options {
+  margin: 14px 0 0;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+
+.legend { font-size: 13px; font-weight: 600; color: var(--muted); padding: 0; }
+.option { display: flex; gap: 8px; align-items: center; }
+.option input { accent-color: var(--brand); width: 16px; height: 16px; }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+
+.primary, .secondary, .link, .inline {
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+.primary, .secondary { transition: background 0.2s, border-color 0.2s, transform 0.3s var(--ease); }
+@media (hover: hover) {
+  .primary:hover { background: var(--brand); border-color: var(--brand); transform: translateY(-1px); }
+  .secondary:hover { border-color: var(--ink); }
+}
+.primary:active, .secondary:active { transform: scale(0.98); }
+.primary { background: var(--navy); color: #fff; border: 1px solid var(--navy); padding: 9px 18px; }
+.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 9px 18px; }
+.link, .inline { background: none; border: 0; padding: 8px 6px; color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.inline { padding: 0; font-weight: inherit; }
+
+.primary:focus-visible, .secondary:focus-visible, .link:focus-visible, .inline:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+@media (min-width: 720px) {
+  .banner { left: 24px; bottom: calc(24px + var(--bar-h)); }
+}
+.banner:focus { outline: none; }
+.banner:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }

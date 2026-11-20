@@ -1,0 +1,25 @@
+.page { padding-block: clamp(36px, 5vw, 64px); }
+.card { max-width: 640px; display: grid; gap: 16px; justify-items: start; padding: clamp(28px, 4vw, 48px); background: var(--bg-soft); border: 1px solid var(--line-soft); border-radius: var(--radius-lg); box-shadow: var(--shadow-rest); }
+.icon { width: 44px; height: 44px; color: var(--brand); }
+.card h1 { font-size: clamp(30px, 3.6vw, 44px); }
+.text { font-size: 17.5px; color: var(--muted); max-width: 52ch; }
+.card a { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; font-weight: 600; color: var(--brand); text-decoration: none; }
+.card a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 0.4s var(--ease); }
+@media (hover: hover) { .card a:hover { background-size: 100% 1px; } }
+.card a svg { width: 16px; height: 16px; }
+.action {
+  margin-top: 6px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--navy);
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 26px;
+  min-height: 48px;
+  cursor: pointer;
+}
+.action { transition: background 0.2s, transform 0.3s var(--ease); }
+@media (hover: hover) { .action:hover { background: var(--brand); transform: translateY(-1px); } }
+.action:active { transform: scale(0.98); }
+.action:focus-visible { outline: 2px solid var(--brand-bright); outline-offset: 3px; }

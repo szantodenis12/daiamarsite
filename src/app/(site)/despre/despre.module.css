@@ -1,0 +1,43 @@
+.tile { composes: tile from "../../../components/ui/surfaces.module.css"; }
+
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: clamp(32px, 4vw, 56px); }
+.fact { composes: pane from "../../../components/ui/surfaces.module.css"; padding: 28px 24px; display: grid; gap: 10px; align-content: start; justify-items: start; }
+.fact strong { font-size: 19px; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; margin-top: 8px; }
+.fact span:not(.tile) { color: var(--muted); font-size: 15px; }
+
+.section { padding-top: clamp(40px, 5vw, 64px); }
+.section h2 { font-size: var(--fs-h2); margin-top: 16px; max-width: 18ch; }
+.cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 5vw, 80px); align-items: start; }
+.text { display: grid; gap: 18px; font-size: 17px; }
+.text p { max-width: 60ch; }
+.text h2 { margin-top: 0; }
+.muted { color: var(--muted); }
+.lead { font-size: 19px; font-weight: 600; }
+
+.offer { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; }
+.offer li { display: flex; gap: 10px; align-items: flex-start; font-size: 16px; }
+.offer li svg { transition: background 0.3s, color 0.3s; }
+@media (hover: hover) { .offer li:hover svg { background: var(--brand); color: #fff; } }
+.offer svg { width: 22px; height: 22px; padding: 4px; border-radius: 999px; background: var(--tint); color: var(--brand); flex: none; margin-top: 2px; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+.photo { position: relative; aspect-ratio: 5 / 4; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-chip); }
+.photo .pxFill { position: absolute; inset: 0; border-radius: inherit; }
+.photo img { object-fit: cover; }
+
+.values { composes: surface from "../../../components/ui/surfaces.module.css"; display: grid; gap: 20px; justify-items: center; text-align: center; padding: clamp(32px, 4vw, 56px) var(--gutter); background: var(--bg-soft); }
+.values h2 { margin-top: 0; }
+.quote { font-size: clamp(24px, 3vw, 36px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; max-width: 28ch; text-wrap: balance; }
+.valuesText { display: grid; gap: 14px; max-width: 64ch; color: var(--muted); margin-top: 8px; }
+
+.card { composes: pane from "../../../components/ui/surfaces.module.css"; padding: clamp(28px, 4vw, 40px); display: grid; gap: 16px; justify-items: start; }
+
+@media (max-width: 900px) {
+  .facts { grid-template-columns: repeat(2, 1fr); }
+  .cols, .split { grid-template-columns: 1fr; }
+  .section h2 { max-width: none; }
+}
+@media (max-width: 560px) {
+  .facts { grid-template-columns: 1fr; }
+  .offer { grid-template-columns: 1fr; }
+}

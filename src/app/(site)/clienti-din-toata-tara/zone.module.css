@@ -1,0 +1,26 @@
+.section { padding-top: var(--section); }
+.cols { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 32px 64px; align-items: start; }
+.cols h2 { font-size: clamp(28px, 3.3vw, 44px); margin-top: 16px; }
+.muted { margin-top: 16px; color: var(--muted); font-size: 16px; }
+.muted a, .text a, .card a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 0.4s var(--ease); }
+@media (hover: hover) { .muted a:hover, .text a:hover, .card a:hover { background-size: 100% 1px; } }
+.muted a { color: var(--brand); font-weight: 600; text-decoration: none; }
+.text { display: grid; gap: 16px; font-size: 17px; line-height: 1.6; }
+.text a { color: var(--brand); font-weight: 600; text-decoration: none; }
+
+.cards { display: grid; gap: 20px; }
+.card { composes: pane from "../../../components/ui/surfaces.module.css"; display: grid; gap: 10px; align-content: start; padding: 28px; background: var(--bg-soft); }
+.card strong { font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-top: 8px; }
+.card p { color: var(--muted); font-size: 16px; }
+.card a { color: var(--brand); font-weight: 600; text-decoration: none; }
+.tile { composes: tile from "../../../components/ui/surfaces.module.css"; }
+
+.services { display: grid; gap: 16px; }
+.serviceLink { composes: flip from "../../../components/ui/surfaces.module.css"; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px 18px 26px; }
+.serviceChip { composes: chip from "../../../components/ui/surfaces.module.css"; }
+.services strong { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.services span { color: var(--fg-muted); font-size: 15px; transition: color 0.35s; }
+
+@media (max-width: 900px) {
+  .cols { grid-template-columns: 1fr; gap: 24px; }
+}
