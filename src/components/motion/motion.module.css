@@ -1,4 +1,6 @@
-.pxFrame { position: relative; overflow: hidden; }
+/* :where() keeps this at zero specificity so a caller class that sets position:absolute (.fill, .pxFill) always wins, whatever order the CSS chunks load in. */
+:where(.pxFrame) { position: relative; }
+.pxFrame { overflow: hidden; }
 .pxInner { position: absolute; left: 0; right: 0; }
 
 /* TextReveal. Each word sits in a clipping mask; the padding/negative margin pair keeps descenders and diacritics from being cut. */

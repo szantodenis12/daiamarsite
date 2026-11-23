@@ -24,10 +24,30 @@ export default function Reveal({ as: Tag = "div", delay = 0, variant = "up", cla
       el.dataset.shown = "true";
       return;
     }
-    return onceInView(el, () => {
+    const show = () => {
       el.dataset.shown = "true";
-    });
-  }, []);
+    };
+    if (variant !== "image") return onceInView(el, show);
+    // Media must never stay clipped: observe with no negative margin, and re-check on load and after a delay in case the observer never fires.
+    const stop = onceInView(el, show, "0px");
+    const visible = () => {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    };
+    const check = () => {
+      if (visible()) {
+        stop();
+        show();
+      }
+    };
+    window.addEventListener("load", check);
+    const timer = window.setTimeout(check, 2500);
+    return () => {
+      stop();
+      window.removeEventListener("load", check);
+      window.clearTimeout(timer);
+    };
+  }, [variant]);
   return (
     <Tag ref={ref as never} className={`${styles.reveal} ${className}`} data-variant={variant} style={delay ? { transitionDelay: `${delay}ms` } : undefined}>
       {children}
