@@ -31,6 +31,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
   outputFileTracingRoot: __dirname,
+  // pdfkit (inside @react-pdf) loads its standard fonts through a dynamic require the tracer cannot follow.
+  outputFileTracingIncludes: {
+    "/**/*": ["./node_modules/pdfkit/package.json", "./node_modules/pdfkit/js/standard-fonts/**", "./node_modules/pdfkit/js/data/**", "./src/lib/offer-pdf/**"],
+  },
   trailingSlash: true,
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"] },
