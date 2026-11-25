@@ -1,0 +1,41 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid var(--warn-line);
+  background: var(--warn-tint);
+  color: var(--warn);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: help;
+}
+.badge:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  z-index: 100;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 32px);
+  padding: 11px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--pop);
+  color: var(--ink);
+  font-size: 14px;
+  box-shadow: var(--shadow-pop);
+  animation: rise 0.25s ease both;
+}
+.toast svg { color: var(--warn); flex: none; }
+@keyframes rise { from { opacity: 0; transform: translate(-50%, 8px); } }
+@media (min-width: 900px) { .toast { bottom: 28px; } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }

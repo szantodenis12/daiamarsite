@@ -1,3 +1,4 @@
+import { isDemo } from "@/lib/demo";
 import { after, NextResponse } from "next/server";
 import { sanitizeTouch, type Touch } from "@/lib/attribution";
 import { classify } from "@/lib/channel";
@@ -8,7 +9,7 @@ import { validateLead } from "@/lib/lead";
 import { blobEnabled, readFileHead, removeFileByKey, storeFile } from "@/lib/storage";
 import { cleanFileName, detectType, MAX_FILE_BYTES, MAX_FILES, UPLOAD_KEY } from "@/lib/upload";
 import { notifyNewLead } from "../leads/notify";
-import { crossSite, deviceFrom, forbidden, line, rateLimited, text, unavailable } from "../request";
+import { crossSite, demoBlocked, deviceFrom, forbidden, line, rateLimited, text, unavailable } from "../request";
 
 const MIN_FILL_MS = 3000;
 const decimal = new Intl.NumberFormat("ro-RO", { maximumFractionDigits: 1 });
@@ -84,6 +85,7 @@ const parseTouch = (value: unknown): Touch | null => {
 
 export async function POST(request: Request) {
   if (crossSite(request)) return forbidden();
+  if (isDemo()) return demoBlocked();
   if (rateLimited(request, "documente", 3, 10 * 60_000)) {
     return NextResponse.json({ error: "Prea multe trimiteri. Încercați din nou peste câteva minute." }, { status: 429 });
   }

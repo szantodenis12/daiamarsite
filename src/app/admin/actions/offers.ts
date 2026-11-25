@@ -10,6 +10,7 @@ import { logActivity } from "@/lib/leads";
 import { OFFER_UNITS, VAT_MODES, type OfferDoc, type OfferItem } from "@/lib/offers";
 import { services } from "@/lib/site";
 import { currentAuthor, requireSession } from "../session";
+import { demoError, guarded, guardedVoid } from "./demo";
 import { id, text, type FormState } from "./form";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -63,7 +64,7 @@ function parseDoc(raw: unknown): OfferDoc | string {
 
 export type SaveOfferResult = { id?: number; error?: string };
 
-export async function saveOffer(input: { id: number | null; leadId: number | null; doc: unknown }): Promise<SaveOfferResult> {
+export const saveOffer = guarded(async function saveOffer(input: { id: number | null; leadId: number | null; doc: unknown }): Promise<SaveOfferResult> {
   await requireSession();
   const doc = parseDoc(input.doc);
   if (typeof doc === "string") return { error: doc };
@@ -93,7 +94,7 @@ export async function saveOffer(input: { id: number | null; leadId: number | nul
   });
   refresh();
   return { id: offerId };
-}
+}, demoError);
 
 async function markSentNow(offer: Offer, how: string) {
   if (offer.status === "ciorna") await db().updateOffer(offer.id, { status: "trimisa", sentAt: new Date().toISOString() });
@@ -102,7 +103,7 @@ async function markSentNow(offer: Offer, how: string) {
 
 export type SendState = FormState & { fallback?: boolean };
 
-export async function sendOffer(_: SendState, form: FormData): Promise<SendState> {
+export const sendOffer = guarded(async function sendOffer(_: SendState, form: FormData): Promise<SendState> {
   await requireSession();
   const offerId = id(form);
   const offer = offerId ? await db().getOffer(offerId) : null;
@@ -121,18 +122,18 @@ export async function sendOffer(_: SendState, form: FormData): Promise<SendState
   await markSentNow(offer, `pe email către ${to}`);
   refresh();
   return { ok: true };
-}
+}, demoError);
 
-export async function markOfferSent(form: FormData) {
+export const markOfferSent = guardedVoid(async function markOfferSent(form: FormData) {
   await requireSession();
   const offerId = id(form);
   const offer = offerId ? await db().getOffer(offerId) : null;
   if (!offer) return;
   await markSentNow(offer, String(form.get("how") ?? "manual").slice(0, 60));
   refresh();
-}
+});
 
-export async function markOfferRefused(form: FormData) {
+export const markOfferRefused = guardedVoid(async function markOfferRefused(form: FormData) {
   await requireSession();
   const offerId = id(form);
   const offer = offerId ? await db().getOffer(offerId) : null;
@@ -140,17 +141,17 @@ export async function markOfferRefused(form: FormData) {
   await db().updateOffer(offer.id, { status: "refuzata" });
   if (offer.leadId) await db().insertActivity({ leadId: offer.leadId, type: "oferta", text: `Oferta ${offer.number} a fost refuzată.`, author: await currentAuthor() });
   refresh();
-}
+});
 
-export async function deleteOffer(form: FormData) {
+export const deleteOffer = guardedVoid(async function deleteOffer(form: FormData) {
   await requireSession();
   const offerId = id(form);
   if (offerId) await db().deleteOffer(offerId);
   refresh();
   redirect("/admin/oferte/");
-}
+});
 
-export async function saveTemplate(name: string, items: unknown): Promise<SaveOfferResult> {
+export const saveTemplate = guarded(async function saveTemplate(name: string, items: unknown): Promise<SaveOfferResult> {
   await requireSession();
   const parsed = Array.isArray(items) ? items.map(parseItem) : [];
   const title = str(name, 80);
@@ -161,16 +162,16 @@ export async function saveTemplate(name: string, items: unknown): Promise<SaveOf
   await saveTemplates([...templates.filter((t) => t.name !== title), { key, name: title, items: parsed as OfferItem[] }]);
   revalidatePath("/admin/oferte", "layout");
   return {};
-}
+}, demoError);
 
-export async function deleteTemplate(form: FormData) {
+export const deleteTemplate = guardedVoid(async function deleteTemplate(form: FormData) {
   await requireSession();
   const key = String(form.get("key") ?? "");
   await saveTemplates((await getTemplates()).filter((t) => t.key !== key));
   revalidatePath("/admin/setari");
-}
+});
 
-export async function saveOfferDefaults(_: FormState, form: FormData): Promise<FormState> {
+export const saveOfferDefaults = guarded(async function saveOfferDefaults(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const replyTo = text(form, "replyTo", 160) ?? "";
   const vatRate = Number(text(form, "vatRate", 5)?.replace(",", ".") ?? 21);
@@ -190,4 +191,4 @@ export async function saveOfferDefaults(_: FormState, form: FormData): Promise<F
   });
   revalidatePath("/admin", "layout");
   return { ok: true };
-}
+}, demoError);

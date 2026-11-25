@@ -80,12 +80,12 @@ export default async function OfferPage({ params }: Props) {
         </div>
 
         <div className={styles.stack}>
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Trimite</h2>
             <SendPanel offerId={offer.id} to={doc.clientEmail} subject={subject} body={body} pdfHref={`${pdf}?download`} />
           </section>
 
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Link online</h2>
             <div className={styles.stack}>
               <code className={styles.linkBox}>{url}</code>
@@ -106,7 +106,7 @@ export default async function OfferPage({ params }: Props) {
             </div>
           </section>
 
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Urmărire</h2>
             <dl className={styles.facts}>
               <div><dt>Trimisă</dt><dd>{offer.sentAt ? formatDate(offer.sentAt) : "încă nu"}</dd></div>

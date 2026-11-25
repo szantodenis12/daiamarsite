@@ -1,28 +1,35 @@
-.filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; align-items: center; }
-.search { grid-column: 1 / -1; position: relative; display: flex; align-items: center; }
-.search svg { position: absolute; left: 12px; color: var(--faint); }
-.search input { padding-left: 36px; }
-.filters > button, .filters > a { grid-column: 1 / -1; }
-@media (min-width: 1100px) {
-  .filters { grid-template-columns: minmax(200px, 2fr) repeat(5, minmax(0, 1fr)) auto auto; }
-  .search, .filters > button, .filters > a { grid-column: auto; }
-}
+.bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.count { margin: 0; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.count strong { color: var(--ink); font-weight: 650; }
 
-.list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
-.list li + li { border-top: 1px solid var(--line-soft); }
-.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 13px 16px; text-decoration: none; color: inherit; }
-.row:hover { background: #fafbfd; }
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-bottom: 14px; align-items: center; padding: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.search { grid-column: 1 / -1; position: relative; display: flex; align-items: center; }
+.search svg { position: absolute; left: 12px; color: var(--faint); pointer-events: none; }
+.search input { padding-left: 36px; }
+.filters > button, .filters > a { justify-self: start; }
+@media (min-width: 900px) { .search { grid-column: span 2; } }
+
+.list { padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.listHead { display: none; }
+.items { list-style: none; margin: 0; padding: 0; }
+.items li + li { border-top: 1px solid var(--line-soft); }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px; text-decoration: none; color: inherit; border-radius: 10px; transition: background-color 0.15s; }
+.row:hover { background: var(--row-hover); }
+.who { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.initial { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--tint); color: var(--brand); font-size: 13px; font-weight: 700; }
 .main { display: grid; gap: 2px; min-width: 0; }
 .main strong { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-weight: 600; }
 .main > span { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.meta { font-size: 13px; color: var(--muted); grid-column: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta { font-size: 13px; color: var(--muted); grid-column: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-left: 46px; }
 .meta:empty { display: none; }
 .meta[data-late] { color: var(--warn); font-weight: 500; }
 .status { grid-column: 2; grid-row: 1; align-self: start; }
 
 @media (min-width: 1100px) {
-  .row { grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1.5fr) 92px 92px; align-items: center; padding: 11px 20px; }
-  .meta, .status { grid-column: auto; grid-row: auto; }
+  .listHead, .row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1.5fr) 92px 108px; gap: 12px; align-items: center; padding: 11px 14px; }
+  .listHead { padding-block: 9px; background: var(--th-bg); border-radius: 10px; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 4px; }
+  .items li + li { border-top: 0; }
+  .meta, .status { grid-column: auto; grid-row: auto; padding-left: 0; }
   .meta:empty { display: block; }
-  .status { justify-self: end; }
+  .status { justify-self: start; }
 }

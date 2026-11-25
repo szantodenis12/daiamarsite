@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { TrendingUp, Wallet } from "lucide-react";
 import { AD_CHANNELS, bucharestMonth } from "@/lib/crm";
 import { db } from "@/lib/db";
 import { saveSpendMonth } from "../../actions/spend";
@@ -41,17 +42,15 @@ export default async function BudgetPage({ searchParams }: Props) {
 
   return (
     <>
+      <h1 className={admin.srOnly}>Buget reclame</h1>
       <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>Bugetul lunar pe canal, în lei</p>
-          <h1 className={admin.h1}>Buget reclame</h1>
-        </div>
+        <p className={admin.muted}>Bugetul lunar pe sursă, în lei. Completați sumele din facturile de reclame.</p>
       </div>
 
       <div className={admin.cards}>
-        <section className={`${admin.card} ${admin.span2}`}>
-          <div className={admin.cardHead}>
-            <h2 className={admin.h2}>Randament pe canal</h2>
+        <section className={`${admin.panel} ${admin.span2}`}>
+          <div className={admin.panelHead}>
+            <h2 className={admin.panelTitle}><TrendingUp aria-hidden size={16} /> Câștig estimat din reclame</h2>
             <nav className={admin.segmented} aria-label="Perioada">
               {(Object.keys(RANGES) as Range[]).map((r) => (
                 <Link key={r} href={`/admin/buget/?m=${r}`} aria-current={r === range ? "true" : undefined}>{RANGES[r]}</Link>
@@ -61,12 +60,12 @@ export default async function BudgetPage({ searchParams }: Props) {
           <RoiTable rows={roiTable(leads, spend, roiMonths)} />
           <p className={admin.footnote}>
             {formatMonth(roiMonths[0])} – {formatMonth(roiMonths[roiMonths.length - 1])}. Print / ONRC adună Flyer ONRC și Print / QR.
-            Randamentul estimat = abonamentul lunar al clienților câștigați × 12 / buget. Este o estimare pe un an, nu profit.
+            Câștigul estimat = abonamentul lunar al clienților câștigați × 12, față de buget. Este o estimare pe un an, nu profit.
           </p>
         </section>
 
-        <section className={`${admin.card} ${admin.span2}`}>
-          <h2 className={admin.h2}>Cheltuieli pe lună <small>sumele din facturile Google, Meta, tipografie</small></h2>
+        <section className={`${admin.panel} ${admin.span2}`}>
+          <div className={admin.panelHead}><h2 className={admin.panelTitle}><Wallet aria-hidden size={16} /> Cheltuieli pe lună <small className={admin.muted}>sumele din facturile Google, Meta, tipografie</small></h2></div>
           <div className={styles.months}>
             {editable.map((month) => (
               <ActionForm key={month} action={saveSpendMonth} submitLabel="Salvează" className={styles.month}>

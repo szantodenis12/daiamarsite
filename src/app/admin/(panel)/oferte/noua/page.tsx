@@ -50,12 +50,8 @@ export default async function NewOfferPage({ searchParams }: Props) {
       <Link href={lead ? `/admin/leads/${lead.id}/` : "/admin/oferte/"} className={admin.back}>
         <ArrowLeft aria-hidden size={16} /> {lead ? lead.name : "Toate ofertele"}
       </Link>
-      <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>{lead ? `Pentru cererea #${lead.id}` : "Fără cerere legată"}</p>
-          <h1 className={admin.h1}>Ofertă nouă</h1>
-        </div>
-      </div>
+      <h1 className={admin.srOnly}>Ofertă nouă</h1>
+      <div className={admin.pageHead}><p className={admin.muted}>{lead ? `Pentru cererea #${lead.id}` : "Fără cerere legată"}</p></div>
       <OfferBuilder offerId={null} leadId={lead?.id ?? null} initial={initial} templates={templates} team={team} />
     </>
   );

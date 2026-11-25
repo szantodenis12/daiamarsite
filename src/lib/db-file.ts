@@ -33,10 +33,11 @@ function normalize(raw: Partial<FileData>): FileData {
 
 const byNewest = <T extends { createdAt: string }>(a: T, b: T) => b.createdAt.localeCompare(a.createdAt);
 
+type Io = { load(): Promise<FileData>; save(data: FileData): Promise<void> };
+
 // Local development only: Vercel's filesystem is read-only, so production needs DATABASE_URL.
 export function fileBackend(): Backend {
   const file = path.join(process.cwd(), ".data", "db.json");
-  let queue: Promise<unknown> = Promise.resolve();
 
   // A missing file is an empty database. A file that does not parse is an error: treating it as empty would let the next
   // write replace every lead with almost nothing.
@@ -51,15 +52,31 @@ export function fileBackend(): Backend {
     return normalize(JSON.parse(raw) as Partial<FileData>);
   }
 
+  async function save(data: FileData) {
+    await mkdir(path.dirname(file), { recursive: true });
+    // Write a temp file and rename it, so a reader in another process never sees half a file.
+    const temp = `${file}.${process.pid}.${Date.now()}.tmp`;
+    await writeFile(temp, JSON.stringify(data, null, 1));
+    await rename(temp, file);
+  }
+
+  return build("file", { load, save });
+}
+
+/** Same behaviour as the file backend, but the data lives in memory only (used by the demo mode). */
+export function memoryBackend(): Backend {
+  let data = normalize({});
+  return build("file", { load: async () => structuredClone(data), save: async (next) => void (data = next) });
+}
+
+function build(kind: Backend["kind"], { load, save }: Io): Backend {
+  let queue: Promise<unknown> = Promise.resolve();
+
   function mutate<T>(change: (data: FileData) => T): Promise<T> {
     const next = queue.then(async () => {
       const data = await load();
       const result = change(data);
-      await mkdir(path.dirname(file), { recursive: true });
-      // Write a temp file and rename it, so a reader in another process never sees half a file.
-      const temp = `${file}.${process.pid}.${Date.now()}.tmp`;
-      await writeFile(temp, JSON.stringify(data, null, 1));
-      await rename(temp, file);
+      await save(data);
       return result;
     });
     queue = next.catch(() => undefined);
@@ -67,7 +84,7 @@ export function fileBackend(): Backend {
   }
 
   return {
-    kind: "file",
+    kind,
     insertLead: ({ createdAt, ...input }) =>
       mutate((data) => {
         const now = new Date().toISOString();

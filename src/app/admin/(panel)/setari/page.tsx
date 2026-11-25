@@ -35,20 +35,18 @@ export default async function SettingsPage() {
     db().offers(),
     db().subscribers(),
   ]);
-  const demo = leads.filter((l) => l.demo).length + events.filter((e) => e.demo).length + spend.filter((s) => s.demo).length + links.filter((l) => l.demo).length + offers.filter((o) => o.demo).length;
+  const demo = leads.filter((l) => l.demo).length + events.filter((e) => e.demo).length + spend.filter((s) => s.demo).length + links.filter((l) => l.demo).length + offers.filter((o) => o.demo).length + subscribers.filter((s) => s.demo).length;
   const neon = db().kind === "neon";
 
   return (
     <>
+      <h1 className={admin.srOnly}>Setări</h1>
       <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>Notificări, echipă, bază de date</p>
-          <h1 className={admin.h1}>Setări</h1>
-        </div>
+        <p className={admin.muted}>Notificări, echipă, oferte și starea datelor.</p>
       </div>
 
-      <div className={admin.cards}>
-        <section className={admin.card}>
+      <div className={admin.panels}>
+        <section className={admin.panel}>
           <h2 className={admin.h2}>Emailuri de notificare</h2>
           <ActionForm action={saveRecipients} submitLabel="Salvează" className={styles.stack}>
             <Field
@@ -56,9 +54,9 @@ export default async function SettingsPage() {
               name="emails"
               hint={
                 recipients.from === "admin"
-                  ? "Se folosesc adresele de aici. Lăsați gol ca să reveniți la LEAD_NOTIFY_TO."
+                  ? "Se folosesc adresele de aici. Lăsați gol ca să reveniți la adresele setate pe server."
                   : recipients.from === "env"
-                    ? `Acum se folosește LEAD_NOTIFY_TO: ${recipients.to.join(", ")}. Adresele salvate aici au prioritate.`
+                    ? `Acum se folosesc adresele setate pe server: ${recipients.to.join(", ")}. Adresele salvate aici au prioritate.`
                     : "Nicio adresă setată. Fără ele nu pleacă nici emailul la cerere nouă, nici rezumatul săptămânal."
               }
             >
@@ -67,7 +65,7 @@ export default async function SettingsPage() {
           </ActionForm>
         </section>
 
-        <section className={admin.card}>
+        <section className={admin.panel}>
           <h2 className={admin.h2}>Echipa</h2>
           <ActionForm action={saveTeam} submitLabel="Salvează" className={styles.stack}>
             <Field label="Nume (câte unul pe rând)" name="team" hint="Apar la „Asignat” pe fiecare cerere și ca autor în istoric.">
@@ -77,53 +75,48 @@ export default async function SettingsPage() {
           {team.length > 0 && <AuthorSelect team={team} author={author} action={setAuthor} />}
         </section>
 
-        <section className={admin.card}>
+        <section className={admin.panel}>
           <h2 className={admin.h2}>Rezumat săptămânal</h2>
           <div className={styles.stack}>
             <p className={admin.muted}>
-              În fiecare luni dimineață: cererile din ultimele 7 zile pe canal, clienții câștigați și follow-up-urile restante, trimise la adresele de notificare.
+              În fiecare luni dimineață: cererile din ultimele 7 zile pe sursă, clienții câștigați și pașii de urmărire restanți, trimise la adresele de notificare.
             </p>
             <dl className={styles.status}>
-              <div><dt>RESEND_API_KEY</dt><Flag on={Boolean(process.env.RESEND_API_KEY)} yes="setat" no="lipsește" /></div>
-              <div><dt>CRON_SECRET</dt><Flag on={Boolean(process.env.CRON_SECRET)} yes="setat" no="lipsește" /></div>
+              <div><dt>Trimitere e-mailuri</dt><Flag on={Boolean(process.env.RESEND_API_KEY)} yes="activă" no="neconfigurată (cere-i dezvoltatorului)" /></div>
+              <div><dt>Rezumat automat, în fiecare luni</dt><Flag on={Boolean(process.env.CRON_SECRET)} yes="activ" no="neconfigurat (cere-i dezvoltatorului)" /></div>
               <div><dt>Destinatari</dt><Flag on={recipients.to.length > 0} yes={recipients.to.join(", ")} no="niciunul" /></div>
             </dl>
             <WeeklyTest />
           </div>
         </section>
 
-        <section className={admin.card}>
+        <section className={admin.panel}>
           <h2 className={admin.h2}>Parola de admin</h2>
-          <ol className={styles.steps}>
-            <li>Vercel → proiectul <code>daiamar</code> → Settings → Environment Variables.</li>
-            <li>Schimbați <code>ADMIN_PASSWORD</code> (Production și Preview).</li>
-            <li>Deployments → Redeploy. Parola nouă merge după redeploy.</li>
-            <li>Ca să deconectați pe toată lumea, schimbați și <code>ADMIN_SECRET</code> (<code>openssl rand -hex 32</code>).</li>
-          </ol>
+          <p className={admin.muted}>Parola se schimbă din setările serverului (cere-i dezvoltatorului). După schimbare, toți colegii se reconectează cu parola nouă.</p>
           <p className={`${admin.muted} ${styles.spaced}`}>Panoul are o singură parolă comună. Numele din „Echipa” arată doar cine a scris o notă.</p>
         </section>
 
         <OfferDefaults settings={offerSettings} templates={templates} />
 
-        <section className={`${admin.card} ${admin.span2}`}>
-          <h2 className={admin.h2}>Baza de date</h2>
+        <section className={`${admin.panel} ${admin.span2}`}>
+          <h2 className={admin.h2}>Datele din aplicație</h2>
           <dl className={styles.status}>
-            <div><dt>Unde se salvează</dt><Flag on={neon} yes="Neon Postgres (DATABASE_URL)" no="Fișier local .data/db.json (doar pentru dezvoltare)" /></div>
+            <div><dt>Unde se salvează</dt><Flag on={neon} yes="Bază de date online" no="Date de test păstrate local (doar pentru dezvoltare)" /></div>
             <div><dt>Cereri</dt><dd>{formatNumber(leads.length)}</dd></div>
             <div><dt>Vizite și clicuri</dt><dd>{formatNumber(events.length)}</dd></div>
             <div><dt>Oferte</dt><dd>{formatNumber(offers.length)}</dd></div>
             <div><dt>Abonați newsletter</dt><dd>{formatNumber(subscribers.length)}</dd></div>
-            <div><dt>Documente încărcate</dt><Flag on={Boolean(process.env.BLOB_READ_WRITE_TOKEN)} yes="Vercel Blob (BLOB_READ_WRITE_TOKEN)" no="Fișiere locale .data/uploads/ (doar pentru dezvoltare)" /></div>
+            <div><dt>Documente încărcate</dt><Flag on={Boolean(process.env.BLOB_READ_WRITE_TOKEN)} yes="Stocare online" no="Păstrate local (doar pentru dezvoltare)" /></div>
             <div><dt>Luni cu buget / linkuri salvate</dt><dd>{formatNumber(new Set(spend.map((s) => s.month)).size)} / {formatNumber(links.length)}</dd></div>
-            <div><dt>Înregistrări demo</dt><dd>{formatNumber(demo)}</dd></div>
+            <div><dt>Înregistrări de test</dt><dd>{formatNumber(demo)}</dd></div>
           </dl>
           {demo > 0 && (
             <form action={deleteDemoData} className={admin.demo}>
-              <p>Datele demo (generate cu <code>npm run seed</code>) apar în toate rapoartele până le ștergeți.</p>
+              <p>Datele de test apar în toate rapoartele până le ștergeți.</p>
               <ConfirmButton
-                label="Șterge datele demo"
-                title="Ștergeți datele demo?"
-                text="Se șterg toate cererile, vizitele, bugetele, linkurile și ofertele marcate demo. Datele reale rămân."
+                label="Șterge datele de test"
+                title="Ștergeți datele de test?"
+                text="Se șterg toate cererile, vizitele, bugetele, linkurile, abonații și ofertele marcate ca date de test. Datele reale rămân."
                 confirmLabel="Șterge"
               />
             </form>

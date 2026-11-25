@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { DEMO_MESSAGE, isDemoError } from "@/lib/demo";
 import { company } from "@/lib/site";
 
 // In-memory and per server instance: enough to stop a form being hammered, not a security boundary.
@@ -49,6 +50,7 @@ const phones = company.phones.map((p) => p.label).join(" sau ");
 
 /** The visitor's data could not be saved: say so plainly and give the phone numbers. */
 export function unavailable(error: unknown) {
+  if (isDemoError(error)) return demoBlocked();
   console.error("Public form failed", error);
   return NextResponse.json({ error: `Nu am putut salva mesajul acum. Sunați-ne la ${phones}.`, unavailable: true }, { status: 503 });
 }
@@ -70,3 +72,6 @@ export function deviceFrom(request: Request): string {
 }
 
 export const isBot = (request: Request) => /bot|crawl|spider|slurp|headless|lighthouse|preview|curl|wget|python|scrapy/i.test(request.headers.get("user-agent") ?? "");
+
+/** Demo mode: nothing is saved. Public forms show this message instead of a thank-you. */
+export const demoBlocked = () => NextResponse.json({ ok: false, demo: true, error: DEMO_MESSAGE }, { status: 409 });

@@ -10,6 +10,15 @@ export const STATUS_LABELS: Record<LeadStatus, string> = {
   pierdut: "Pierdut",
 };
 
+/** What the team sees on screen. STATUS_LABELS stays as is: it is written into the timeline and the Excel export. */
+export const STATUS_DISPLAY: Record<LeadStatus, string> = {
+  nou: "Nou",
+  contactat: "Contactat",
+  oferta: "Ofertă trimisă",
+  client: "Client",
+  pierdut: "Pierdut",
+};
+
 export const ACTIVITY_TYPES = ["nota", "apel", "email", "whatsapp", "status", "oferta", "documente"] as const;
 export type ActivityType = (typeof ACTIVITY_TYPES)[number];
 

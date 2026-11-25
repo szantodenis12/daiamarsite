@@ -1,0 +1,12 @@
+.wrap { display: grid; gap: 16px; width: 100%; max-width: 380px; animation: rise 0.45s var(--ease) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.card { display: grid; gap: 12px; padding: 28px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); }
+.brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 650; letter-spacing: -0.01em; margin-bottom: 4px; }
+.brand span { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 6px; background: var(--active); color: var(--muted); }
+.title { font-size: 22px; font-weight: 650; letter-spacing: -0.02em; margin: 0; }
+.lead { margin: 0 0 4px; font-size: 14px; color: var(--muted); }
+.fields { display: grid; gap: 6px; }
+.card :global(button[type="submit"]) { margin-top: 6px; }
+.theme { display: flex; justify-content: center; }
+.theme > div { gap: 10px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .wrap { animation: none; } }

@@ -9,7 +9,7 @@ import { Board, type Card } from "./Board";
 import admin from "../../admin.module.css";
 import { requireSession } from "../../session";
 
-export const metadata: Metadata = { title: "Pipeline" };
+export const metadata: Metadata = { title: "Cereri pe etape" };
 export const dynamic = "force-dynamic";
 
 const CLOSED_DAYS = 60;
@@ -46,10 +46,11 @@ export default async function PipelinePage({ searchParams }: Props) {
 
   return (
     <>
+      <h1 className={admin.srOnly}>Cereri pe etape</h1>
       <div className={admin.pageHead}>
         <div>
+          <p className={admin.muted}>Trageți o cerere în coloana următoare când avansează.</p>
           <p className={admin.kicker}>{open.count} deschise · {formatLei(open.monthly)}/lună în lucru</p>
-          <h1 className={admin.h1}>Pipeline</h1>
         </div>
         {team.length > 0 && (
           <nav className={admin.segmented} aria-label="Asignat">
@@ -60,7 +61,7 @@ export default async function PipelinePage({ searchParams }: Props) {
         )}
       </div>
       <Board key={assignee ?? ""} cards={cards} />
-      <p className={admin.footnote}>Trageți cardurile între coloane sau alegeți statusul din card. Coloanele Client și Pierdut arată ultimele {CLOSED_DAYS} de zile.</p>
+      <p className={admin.footnote}>Pe telefon alegeți etapa de sus și mutați cererea cu „Mută în…”. Coloanele Client și Pierdut arată ultimele {CLOSED_DAYS} de zile.</p>
     </>
   );
 }

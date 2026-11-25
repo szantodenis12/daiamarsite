@@ -23,7 +23,7 @@ const TEXT_FIELDS: { name: keyof OfferSettings; label: string; placeholder: stri
 export function OfferDefaults({ settings, templates }: { settings: OfferSettings; templates: OfferTemplate[] }) {
   return (
     <>
-      <section className={`${admin.card} ${admin.span2}`}>
+      <section className={`${admin.panel} ${admin.span2}`}>
         <h2 className={admin.h2}>Oferte: texte și date firmă</h2>
         <ActionForm action={saveOfferDefaults} submitLabel="Salvează" className={styles.stack}>
           <div className={admin.formGrid}>
@@ -40,7 +40,7 @@ export function OfferDefaults({ settings, templates }: { settings: OfferSettings
         </ActionForm>
       </section>
 
-      <section className={`${admin.card} ${admin.span2}`}>
+      <section className={`${admin.panel} ${admin.span2}`}>
         <h2 className={admin.h2}>Șabloane de ofertă</h2>
         <ul className={styles.templates}>
           {templates.map((t) => (

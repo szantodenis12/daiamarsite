@@ -1,5 +1,6 @@
 .months { display: grid; gap: 10px; }
-.month { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--line-soft); border-radius: 12px; background: var(--bg); }
+.month { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); transition: border-color 0.2s; }
+.month:hover, .month:focus-within { border-color: var(--line-strong); }
 .monthHead { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
 .monthHead strong { font-weight: 600; text-transform: capitalize; }
 .inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }

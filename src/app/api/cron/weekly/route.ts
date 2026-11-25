@@ -1,3 +1,4 @@
+import { isDemo } from "@/lib/demo";
 import { NextResponse } from "next/server";
 import { sendWeeklySummary } from "@/lib/weekly";
 
@@ -5,6 +6,7 @@ export const dynamic = "force-dynamic";
 
 // Vercel Cron sends "Authorization: Bearer $CRON_SECRET" when the variable is set on the project.
 export async function GET(request: Request) {
+  if (isDemo()) return NextResponse.json({ ok: false, demo: true });
   const secret = process.env.CRON_SECRET;
   if (!secret || request.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });

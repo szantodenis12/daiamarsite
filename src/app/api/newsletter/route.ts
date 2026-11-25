@@ -1,3 +1,4 @@
+import { isDemo } from "@/lib/demo";
 import { after, NextResponse } from "next/server";
 import { sanitizeTouch } from "@/lib/attribution";
 import { classify } from "@/lib/channel";
@@ -7,12 +8,13 @@ import { canSendEmail } from "@/lib/email";
 import { isSuspect } from "@/lib/form-token";
 import { isEmail } from "@/lib/lead";
 import { newSubscriberToken, sendConfirmation } from "@/lib/newsletter";
-import { crossSite, forbidden, line, rateLimited, unavailable } from "../request";
+import { crossSite, demoBlocked, forbidden, line, rateLimited, unavailable } from "../request";
 
 const MIN_FILL_MS = 2000;
 
 export async function POST(request: Request) {
   if (crossSite(request)) return forbidden();
+  if (isDemo()) return demoBlocked();
   if (rateLimited(request, "newsletter", 5, 10 * 60_000)) {
     return NextResponse.json({ error: "Prea multe încercări. Reveniți peste câteva minute." }, { status: 429 });
   }

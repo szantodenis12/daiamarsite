@@ -19,14 +19,9 @@ export default async function NewLeadPage() {
   return (
     <>
       <Link href="/admin/leads/" className={admin.back}><ArrowLeft aria-hidden size={16} /> Toate cererile</Link>
-      <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>Cerere nouă</p>
-          <h1 className={admin.h1}>Adaugă o cerere</h1>
-        </div>
-      </div>
-      <div className={`${admin.card} ${styles.form}`}>
-        <p className={admin.muted}>Pentru cererile care nu vin prin site: telefon, recomandare, vizită la birou. Apar în rapoarte la canalul ales.</p>
+      <h1 className={admin.srOnly}>Adaugă o cerere</h1>
+      <div className={`${admin.panel} ${styles.card}`}>
+        <p className={admin.muted}>Pentru cererile care nu vin prin site: telefon, recomandare, vizită la birou. Apar în rapoarte la sursa aleasă.</p>
         <ActionForm action={createLead} submitLabel="Salvează cererea" className={styles.form}>
           <div className={admin.formGrid}>
             <SourcePicker />

@@ -66,7 +66,7 @@ export function GlobalSearch() {
         ref={input}
         type="search"
         value={query}
-        placeholder="Caută nume, firmă, telefon"
+        placeholder="Caută o cerere, firmă, telefon…"
         aria-label="Caută cereri"
         aria-expanded={open && results.length > 0}
         aria-controls="rezultate-cautare"

@@ -34,11 +34,9 @@ export default async function LeadsPage({ searchParams }: Props) {
 
   return (
     <>
-      <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>Cereri</p>
-          <h1 className={admin.h1}>{leads.length} {leads.length === 1 ? "cerere" : "cereri"}</h1>
-        </div>
+      <h1 className={admin.srOnly}>Toate cererile</h1>
+      <div className={styles.bar}>
+        <p className={styles.count}><strong>{leads.length}</strong> {leads.length === 1 ? "cerere" : "cereri"}{filtered ? " pentru filtrele alese" : ""}</p>
         <div className={admin.actions}>
           <a href={exportHref()} className={admin.secondary}><Download aria-hidden size={16} /> CSV</a>
           <a href={exportHref("excel")} className={admin.secondary}><FileSpreadsheet aria-hidden size={16} /> Excel</a>
@@ -56,8 +54,8 @@ export default async function LeadsPage({ searchParams }: Props) {
           <option value="">Toate statusurile</option>
           {LEAD_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
         </select>
-        <select name="channel" defaultValue={filters.channel ?? ""} className={admin.input} aria-label="Canal">
-          <option value="">Toate canalele</option>
+        <select name="channel" defaultValue={filters.channel ?? ""} className={admin.input} aria-label="Sursă">
+          <option value="">Toate sursele</option>
           {[...CHANNELS, ...MANUAL_SOURCES.filter((s) => s !== "Altul")].map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
         <select name="service" defaultValue={filters.service ?? ""} className={admin.input} aria-label="Serviciu">
@@ -69,33 +67,38 @@ export default async function LeadsPage({ searchParams }: Props) {
           {team.map((name) => <option key={name} value={name}>{name}</option>)}
           <option value="-">Neasignat</option>
         </select>
-        <select name="s" defaultValue={filters.s ?? ""} className={admin.input} aria-label="Trimiteri suspecte">
+        <select name="s" defaultValue={filters.s ?? ""} className={admin.input} aria-label="Posibil spam">
           <option value="">Toate trimiterile</option>
-          <option value="nu">Fără cele suspecte</option>
-          <option value="da">Doar cele suspecte</option>
+          <option value="nu">Fără cele posibil spam</option>
+          <option value="da">Doar cele posibil spam</option>
         </select>
         <select name="p" defaultValue={filters.p ?? "all"} className={admin.input} aria-label="Perioada">
           {Object.entries(PERIODS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
         </select>
-        <button type="submit" className={admin.primary}>Filtrează</button>
+        <button type="submit" className={admin.secondary}>Filtrează</button>
         {filtered && <Link href="/admin/leads/" className={admin.ghost}>Șterge filtrele</Link>}
       </form>
 
       {leads.length ? (
-        <ul className={styles.list}>
+        <div className={styles.list}>
+          <div className={styles.listHead} aria-hidden="true"><span>Nume / firmă</span><span>Serviciu</span><span>Sursă</span><span>Următorul pas / valoare</span><span>Data</span><span>Status</span></div>
+          <ul className={styles.items}>
           {leads.slice(0, PAGE_SIZE).map((lead) => {
             const late = lead.nextActionAt && lead.nextActionAt < today && ["nou", "contactat", "oferta"].includes(lead.status);
             return (
               <li key={lead.id}>
                 <Link href={`/admin/leads/${lead.id}/`} className={styles.row}>
+                  <span className={styles.who}>
+                  <span className={styles.initial} aria-hidden="true">{lead.name.trim().charAt(0).toUpperCase() || "?"}</span>
                   <span className={styles.main}>
                     <strong>
                       {lead.name}
                       {lead.kind !== "cerere" && <span className={admin.chip} data-tone="brand">{LEAD_KIND_LABELS[lead.kind]}</span>}
-                      {lead.suspect && <span className={admin.chip} data-tone="warn" title="Trimisă mai repede decât poate completa un om formularul. Nu intră în rapoarte."><ShieldAlert aria-hidden size={11} /> suspectă</span>}
+                      {lead.suspect && <span className={admin.chip} data-tone="warn" title="Trimisă mai repede decât poate completa un om formularul. Nu intră în rapoarte."><ShieldAlert aria-hidden size={11} /> Posibil spam</span>}
                       {duplicates.has(lead.id) && <span className={admin.chip} data-tone="warn" title="Același telefon sau email ca altă cerere"><Copy aria-hidden size={11} /> duplicat</span>}
                     </strong>
                     <span>{lead.company ?? lead.phone ?? lead.email}</span>
+                  </span>
                   </span>
                   <span className={styles.meta}>{serviceTitle(lead.service)}</span>
                   <span className={styles.meta}><span className={admin.chip}>{lead.channel}</span></span>
@@ -108,9 +111,10 @@ export default async function LeadsPage({ searchParams }: Props) {
               </li>
             );
           })}
-        </ul>
+          </ul>
+        </div>
       ) : (
-        <div className={admin.card}>
+        <div className={admin.panel}>
           <EmptyState icon={Inbox} title={filtered ? "Nicio cerere pentru filtrele alese" : "Nicio cerere încă"} text={filtered ? undefined : "Cererile din formularul de pe site apar aici. Pe cele venite la telefon le puteți adăuga manual."}>
             {filtered ? <Link href="/admin/leads/" className={admin.secondary}>Șterge filtrele</Link> : <Link href="/admin/leads/nou/" className={admin.primary}>Adaugă o cerere</Link>}
           </EmptyState>

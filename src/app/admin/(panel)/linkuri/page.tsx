@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Link2, Trash2 } from "lucide-react";
+import { Link2, Plus, Trash2 } from "lucide-react";
 import { db } from "@/lib/db";
 import { deleteLink, saveLink } from "../../actions/links";
 import { formatNumber, formatShortDate } from "../../format";
@@ -25,26 +25,24 @@ export default async function LinksPage() {
 
   return (
     <>
+      <h1 className={admin.srOnly}>Linkuri și coduri QR</h1>
       <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>Link cu sursă + cod QR pentru flyere, cărți de vizită, reclame</p>
-          <h1 className={admin.h1}>Linkuri de campanie</h1>
-        </div>
+        <p className={admin.muted}>Un link cu sursa inclusă și un cod QR pentru flyere, cărți de vizită și reclame. Vedeți câte vizite și cereri aduce fiecare.</p>
       </div>
 
       <div className={admin.cards}>
-        <section className={`${admin.card} ${admin.span2}`}>
-          <h2 className={admin.h2}>Link nou</h2>
+        <section className={`${admin.panel} ${admin.span2}`}>
+          <div className={admin.panelHead}><h2 className={admin.panelTitle}><Plus aria-hidden size={16} /> Link nou</h2></div>
           <ActionForm action={saveLink} submitLabel="Salvează în listă">
             <LinkBuilder />
           </ActionForm>
           <p className={admin.footnote}>
-            Pentru Google Ads nu e nevoie de link: auto-tagging-ul (gclid) e suficient. Testați codul QR cu telefonul înainte de tipărire.
+            Pentru Google Ads nu e nevoie de link: Google marchează singur clicurile. Testați codul QR cu telefonul înainte de tipărire.
           </p>
         </section>
 
-        <section className={`${admin.card} ${admin.span2}`}>
-          <h2 className={admin.h2}>Linkuri salvate <small>vizite și cereri de la fiecare</small></h2>
+        <section className={`${admin.panel} ${admin.span2}`}>
+          <div className={admin.panelHead}><h2 className={admin.panelTitle}><Link2 aria-hidden size={16} /> Linkuri salvate <small className={admin.muted}>vizite și cereri de la fiecare</small></h2></div>
           {links.length ? (
             <ul className={styles.saved}>
               {links.map((link) => {
@@ -70,7 +68,7 @@ export default async function LinksPage() {
                           className={`${admin.ghost} ${admin.small}`}
                           label={<><Trash2 aria-hidden size={14} /> Șterge</>}
                           title="Ștergeți linkul din listă?"
-                          text="Linkul tipărit continuă să funcționeze și vizitele se numără în continuare pe canal. Dispare doar din această listă."
+                          text="Linkul tipărit continuă să funcționeze și vizitele se numără în continuare la sursa lui. Dispare doar din această listă."
                           confirmLabel="Șterge"
                         />
                       </form>

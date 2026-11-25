@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Download, FileSpreadsheet, MailCheck, Search, ShieldAlert } from "lucide-react";
+import { Clock, Download, FileSpreadsheet, MailCheck, MailX, Search, Send, ShieldAlert, Users } from "lucide-react";
 import { CHANNELS } from "@/lib/channel";
 import { db, SUBSCRIBER_STATUSES } from "@/lib/db";
 import { canSendEmail } from "@/lib/email";
@@ -32,15 +32,15 @@ export default async function SubscribersPage({ searchParams }: Props) {
   );
   const query = new URLSearchParams(Object.entries(filters).filter(([, v]) => v) as [string, string][]).toString();
   const exportHref = (format?: string) => `/api/admin/abonati/?${[query, format && `format=${format}`].filter(Boolean).join("&")}`;
+  const TONES = { pending: "amber", confirmed: "green", unsubscribed: "grey" } as const;
+  const ICONS = { pending: <Clock aria-hidden size={18} />, confirmed: <Users aria-hidden size={18} />, unsubscribed: <MailX aria-hidden size={18} /> };
   const counts = Object.fromEntries(SUBSCRIBER_STATUSES.map((s) => [s, all.filter((x) => x.status === s).length]));
 
   return (
     <>
-      <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>Newsletter „Noutăți fiscale”</p>
-          <h1 className={admin.h1}>{counts.confirmed} abonați confirmați</h1>
-        </div>
+      <h1 className={admin.srOnly}>Abonați newsletter</h1>
+      <div className={styles.bar}>
+        <p className={styles.count}>Newsletter „Noutăți fiscale”: <strong>{counts.confirmed}</strong> abonați confirmați</p>
         <div className={admin.actions}>
           <a href={exportHref()} className={admin.secondary}><Download aria-hidden size={16} /> CSV</a>
           <a href={exportHref("excel")} className={admin.secondary}><FileSpreadsheet aria-hidden size={16} /> Excel</a>
@@ -49,15 +49,21 @@ export default async function SubscribersPage({ searchParams }: Props) {
 
       <section className={admin.kpis}>
         {SUBSCRIBER_STATUSES.map((s) => (
-          <div key={s} className={admin.kpi}>
-            <span>{SUBSCRIBER_LABELS[s]}</span>
-            <strong>{counts[s]}</strong>
+          <div key={s} className={admin.stat}>
+            <span className={admin.statIcon} data-tone={TONES[s]}>{ICONS[s]}</span>
+            <div className={admin.statBody}>
+              <p className={admin.statLabel}>{SUBSCRIBER_LABELS[s]}</p>
+              <p className={admin.statValue}>{counts[s]}</p>
+            </div>
           </div>
         ))}
-        <div className={admin.kpi}>
-          <span>Email de confirmare</span>
-          <strong className={admin.kpiText}>{canSendEmail() ? "Resend activ" : "Fără Resend"}</strong>
-          <small>{canSendEmail() ? "Abonații confirmă singuri din e-mail." : "Confirmați manual, din listă, după ce verificați adresa."}</small>
+        <div className={admin.stat}>
+          <span className={admin.statIcon} data-tone="violet"><Send aria-hidden size={18} /></span>
+          <div className={admin.statBody}>
+            <p className={admin.statLabel}>E-mail de confirmare</p>
+            <p className={`${admin.statValue} ${styles.statText}`}>{canSendEmail() ? "Trimis automat" : "Confirmare manuală"}</p>
+            <p className={admin.statDelta}>{canSendEmail() ? "Abonații confirmă singuri din e-mail." : "Confirmați din listă, după ce verificați adresa."}</p>
+          </div>
         </div>
       </section>
 
@@ -71,21 +77,23 @@ export default async function SubscribersPage({ searchParams }: Props) {
           <option value="">Toate statusurile</option>
           {SUBSCRIBER_STATUSES.map((s) => <option key={s} value={s}>{SUBSCRIBER_LABELS[s]}</option>)}
         </select>
-        <select name="channel" defaultValue={filters.channel ?? ""} className={admin.input} aria-label="Canal">
-          <option value="">Toate canalele</option>
+        <select name="channel" defaultValue={filters.channel ?? ""} className={admin.input} aria-label="Sursă">
+          <option value="">Toate sursele</option>
           {CHANNELS.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
-        <button type="submit" className={admin.primary}>Filtrează</button>
+        <button type="submit" className={admin.secondary}>Filtrează</button>
         {query && <Link href="/admin/abonati/" className={admin.ghost}>Șterge filtrele</Link>}
       </form>
 
       {list.length ? (
-        <ul className={styles.list}>
-          {list.map((s) => (
+        <div className={styles.list}>
+          <div className={styles.listHead} aria-hidden="true"><span>Adresă</span><span>Sursă</span><span>Formular / data</span><span>Status</span><span /></div>
+          <ul className={styles.items}>
+          {list.slice(0, 100).map((s) => (
             <li key={s.id} className={styles.row}>
               <span className={styles.main}>
                 <strong>{s.email}</strong>
-                {s.suspect && <span className={admin.chip} data-tone="warn" title="Trimis mai repede decât poate completa un om formularul. Nu a primit e-mail de confirmare."><ShieldAlert aria-hidden size={11} /> suspect</span>}
+                {s.suspect && <span className={admin.chip} data-tone="warn" title="Formularul a fost trimis mai repede decât îl poate completa un om. Nu a primit e-mail de confirmare."><ShieldAlert aria-hidden size={11} /> Posibil spam</span>}
                 <span>{[s.name, s.company].filter(Boolean).join(", ") || "fără nume"}</span>
               </span>
               <span className={styles.meta}><span className={admin.chip}>{s.channel}</span></span>
@@ -117,16 +125,17 @@ export default async function SubscribersPage({ searchParams }: Props) {
               </span>
             </li>
           ))}
-        </ul>
+          </ul>
+        </div>
       ) : (
-        <div className={admin.card}>
-          <EmptyState icon={MailCheck} title={query ? "Niciun abonat pentru filtrele alese" : "Niciun abonat încă"} text={query ? undefined : "Abonările din /resurse/ și din subsolul site-ului apar aici, cu canalul din care a venit vizita."} />
+        <div className={admin.panel}>
+          <EmptyState icon={MailCheck} title={query ? "Niciun abonat pentru filtrele alese" : "Niciun abonat încă"} text={query ? undefined : "Abonările din pagina Resurse și din subsolul site-ului apar aici, cu sursa din care a venit vizita."} />
         </div>
       )}
 
+      {list.length > 100 && <p className={admin.footnote}>Sunt afișate primele 100. Restul: filtre sau export.</p>}
       <p className={admin.footnote}>
-        Site-ul doar colectează adresele (dublu opt-in). Trimiterea newsletterului se face din Resend Broadcasts sau alt instrument, cu exportul CSV de aici. Fiecare email trebuie să conțină linkul de dezabonare al abonatului.
-      </p>
+        Site-ul doar colectează adresele (dublu opt-in). Newsletterul se trimite din instrumentul de e-mail folosit de firmă, cu exportul CSV de aici. Fiecare e-mail trebuie să conțină linkul de dezabonare al abonatului.</p>
     </>
   );
 }

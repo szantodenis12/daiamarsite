@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FileText, Plus } from "lucide-react";
+import { CircleCheck, FilePen, FileText, Hourglass, Plus, Send } from "lucide-react";
 import { db } from "@/lib/db";
 import { formatLeiExact, OFFER_STATUS_LABELS, offerTotals, shownStatus, type ShownStatus } from "@/lib/offers";
 import { formatShortDate } from "../../format";
@@ -32,19 +32,29 @@ export default async function OffersPage({ searchParams }: Props) {
 
   return (
     <>
-      <div className={admin.pageHead}>
-        <div>
-          <p className={admin.kicker}>{rows.length} oferte</p>
-          <h1 className={admin.h1}>Oferte</h1>
-        </div>
+      <h1 className={admin.srOnly}>Toate ofertele</h1>
+      <div className={styles.bar}>
+        <p className={styles.count}><strong>{rows.length}</strong> {rows.length === 1 ? "ofertă" : "oferte"}</p>
         <Link href="/admin/oferte/noua/" className={admin.primary}><Plus aria-hidden size={16} /> Ofertă nouă</Link>
       </div>
 
       <section className={admin.kpis}>
-        <div className={admin.kpi}><span>În așteptare (trimise, văzute)</span><strong>{formatLeiExact(open.monthly)}<small>/lună</small></strong><small>{formatLeiExact(open.oneOff)} o singură dată</small></div>
-        <div className={admin.kpi}><span>Acceptate</span><strong>{formatLeiExact(accepted.monthly)}<small>/lună</small></strong><small>{formatLeiExact(accepted.oneOff)} o singură dată</small></div>
-        <div className={admin.kpi}><span>Trimise + văzute</span><strong>{count("trimisa") + count("vazuta")}</strong><small>{count("vazuta")} deschise de client</small></div>
-        <div className={admin.kpi}><span>Ciorne</span><strong>{count("ciorna")}</strong><small>{count("expirata")} expirate</small></div>
+        <div className={admin.stat}>
+          <span className={admin.statIcon} data-tone="amber"><Hourglass aria-hidden size={18} /></span>
+          <div className={admin.statBody}><p className={admin.statLabel}>În așteptare (trimise, văzute)</p><p className={admin.statValue}>{formatLeiExact(open.monthly)}<small>/lună</small></p><p className={admin.statDelta}>{formatLeiExact(open.oneOff)} o singură dată</p></div>
+        </div>
+        <div className={admin.stat}>
+          <span className={admin.statIcon} data-tone="green"><CircleCheck aria-hidden size={18} /></span>
+          <div className={admin.statBody}><p className={admin.statLabel}>Acceptate</p><p className={admin.statValue}>{formatLeiExact(accepted.monthly)}<small>/lună</small></p><p className={admin.statDelta}>{formatLeiExact(accepted.oneOff)} o singură dată</p></div>
+        </div>
+        <div className={admin.stat}>
+          <span className={admin.statIcon} data-tone="violet"><Send aria-hidden size={18} /></span>
+          <div className={admin.statBody}><p className={admin.statLabel}>Trimise + văzute</p><p className={admin.statValue}>{count("trimisa") + count("vazuta")}</p><p className={admin.statDelta}>{count("vazuta")} deschise de client</p></div>
+        </div>
+        <div className={admin.stat}>
+          <span className={admin.statIcon} data-tone="grey"><FilePen aria-hidden size={18} /></span>
+          <div className={admin.statBody}><p className={admin.statLabel}>Ciorne</p><p className={admin.statValue}>{count("ciorna")}</p><p className={admin.statDelta}>{count("expirata")} expirate</p></div>
+        </div>
       </section>
 
       <nav className={`${admin.segmented} ${styles.filters}`} aria-label="Status">
@@ -55,8 +65,10 @@ export default async function OffersPage({ searchParams }: Props) {
       </nav>
 
       {rows.length ? (
-        <ul className={styles.list}>
-          {rows.map(({ offer, status: shown, totals }) => (
+        <div className={styles.list}>
+          <div className={styles.listHead} aria-hidden="true"><span>Client / ofertă</span><span>Lunar</span><span>O singură dată</span><span>Data</span><span>Status</span></div>
+          <ul className={styles.items}>
+          {rows.slice(0, 100).map(({ offer, status: shown, totals }) => (
             <li key={offer.id}>
               <Link href={`/admin/oferte/${offer.id}/`} className={styles.row}>
                 <span className={styles.rowMain}>
@@ -70,14 +82,16 @@ export default async function OffersPage({ searchParams }: Props) {
               </Link>
             </li>
           ))}
-        </ul>
+          </ul>
+        </div>
       ) : (
-        <div className={admin.card}>
+        <div className={admin.panel}>
           <EmptyState icon={FileText} title={status ? "Nicio ofertă cu acest status" : "Nicio ofertă încă"} text="O ofertă se creează din pagina unei cereri sau de aici, pornind de la un șablon.">
             <Link href="/admin/oferte/noua/" className={admin.primary}>Ofertă nouă</Link>
           </EmptyState>
         </div>
       )}
+      {rows.length > 100 && <p className={admin.footnote}>Sunt afișate primele 100. Restul: căutare sau filtru.</p>}
       <p className={admin.footnote}>Valorile sunt fără TVA, după discount. O ofertă trimisă trece singură în „Expirată” după perioada de valabilitate.</p>
     </>
   );

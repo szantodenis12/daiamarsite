@@ -6,14 +6,15 @@
   min-height: 38px;
   padding: 7px 12px;
   border-radius: 10px;
-  border: 1px solid #e3e8ef;
-  background: #fff;
-  color: #245482;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--brand);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+  transition: background-color 0.15s, border-color 0.15s;
 }
-.action:hover { background: #e9f1f9; border-color: #cfe0f1; }
+.action:hover { background: var(--tint); border-color: var(--line-hover); }
 .quick[data-compact] .action { min-height: 32px; padding: 5px 9px; font-size: 13px; }
 @media (max-width: 520px) {
   .quick[data-compact] .action span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

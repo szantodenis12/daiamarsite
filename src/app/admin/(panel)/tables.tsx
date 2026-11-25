@@ -11,8 +11,8 @@ export function RoiTable({ rows }: { rows: RoiRow[] }) {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Canal</th><th>Buget</th><th>Cereri</th><th>Clienți</th><th>Cost / cerere</th><th>Cost / client</th>
-            <th>Câștigat / lună</th><th>Randament estimat</th>
+            <th>Sursă</th><th>Cheltuit</th><th>Cereri</th><th>Clienți noi</th><th>Cost pe cerere</th><th>Cost pe client nou</th>
+            <th>Câștig pe lună</th><th>Câștig estimat din reclame</th>
           </tr>
         </thead>
         <tbody>
@@ -39,7 +39,7 @@ export function FunnelTable({ rows }: { rows: FunnelRow[] }) {
     <div className={styles.tableWrap}>
       <table className={styles.table}>
         <thead>
-          <tr><th>Canal</th><th>Vizite</th><th>Cereri</th><th>Contactați</th><th>Clienți</th><th>Primul contact (medie)</th></tr>
+          <tr><th>Sursă</th><th>Vizite</th><th>Cereri</th><th>Contactați</th><th>Clienți</th><th>Timp mediu până la primul telefon/mesaj</th></tr>
         </thead>
         <tbody>
           {rows.map((r) => (

@@ -1,9 +1,9 @@
 "use client";
 
-import { startTransition, useOptimistic, useState } from "react";
+import { startTransition, useOptimistic, useRef, useState } from "react";
 import Link from "next/link";
 import { CalendarClock, GripVertical } from "lucide-react";
-import { LEAD_STATUSES, STATUS_LABELS, type LeadStatus, type LostReason } from "@/lib/crm";
+import { LEAD_STATUSES, STATUS_DISPLAY, type LeadStatus, type LostReason } from "@/lib/crm";
 import { moveLead } from "../../actions/leads";
 import { LostReasonDialog } from "../../ui/LostReasonDialog";
 import styles from "./board.module.css";
@@ -32,8 +32,11 @@ export function Board({ cards }: { cards: Card[] }) {
     state.map((c) => (c.id === move.id ? { ...c, status: move.status } : c)),
   );
   const [over, setOver] = useState<LeadStatus | null>(null);
+  const [dragging, setDragging] = useState<number | null>(null);
   const [lost, setLost] = useState<Card | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<LeadStatus>(LEAD_STATUSES[0]);
+  const boardRef = useRef<HTMLDivElement>(null);
 
   const commit = (id: number, status: LeadStatus, reason?: LostReason) =>
     startTransition(async () => {
@@ -50,22 +53,60 @@ export function Board({ cards }: { cards: Card[] }) {
     else commit(id, status);
   };
 
+  /** While dragging, scroll the hovered column (and the board) when the pointer nears an edge. */
+  const autoScroll = (e: React.DragEvent<HTMLElement>) => {
+    const EDGE = 56;
+    const STEP = 14;
+    const list = e.currentTarget.querySelector<HTMLElement>("[data-list]");
+    if (list) {
+      const r = list.getBoundingClientRect();
+      if (e.clientY < r.top + EDGE) list.scrollTop -= STEP;
+      else if (e.clientY > r.bottom - EDGE) list.scrollTop += STEP;
+    }
+    const board = boardRef.current;
+    if (board) {
+      const r = board.getBoundingClientRect();
+      if (e.clientX < r.left + EDGE) board.scrollLeft -= STEP;
+      else if (e.clientX > r.right - EDGE) board.scrollLeft += STEP;
+    }
+  };
+
   return (
     <>
+      <div className={styles.tabs} role="tablist" aria-label="Etape">
+        {LEAD_STATUSES.map((status) => (
+          <button
+            key={status}
+            type="button"
+            role="tab"
+            id={`tab-${status}`}
+            aria-selected={tab === status}
+            aria-controls={`col-${status}`}
+            className={styles.tab}
+            onClick={() => setTab(status)}
+          >
+            {STATUS_DISPLAY[status]}
+            <span>{optimistic.filter((c) => c.status === status).length}</span>
+          </button>
+        ))}
+      </div>
       {error && <p className={admin.alert} role="alert">{error}</p>}
-      <div className={styles.board}>
+      <div ref={boardRef} className={styles.board} data-dragging={dragging !== null || undefined}>
         {LEAD_STATUSES.map((status) => {
           const column = optimistic.filter((c) => c.status === status);
           const value = column.reduce((sum, c) => sum + (c.monthlyValue ?? 0), 0);
           return (
             <section
               key={status}
+              id={`col-${status}`}
               className={styles.column}
+              data-active={tab === status || undefined}
               data-over={over === status || undefined}
-              aria-label={STATUS_LABELS[status]}
+              aria-label={STATUS_DISPLAY[status]}
               onDragOver={(e) => {
                 e.preventDefault();
                 setOver(status);
+                autoScroll(e);
               }}
               onDragLeave={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget as Node)) setOver(null);
@@ -73,23 +114,30 @@ export function Board({ cards }: { cards: Card[] }) {
               onDrop={(e) => {
                 e.preventDefault();
                 setOver(null);
+                setDragging(null);
                 move(Number(e.dataTransfer.getData("text/plain")), status);
               }}
             >
               <header className={styles.columnHead}>
-                <span className={admin.status} data-status={status}>{STATUS_LABELS[status]}</span>
+                <span className={admin.status} data-status={status}>{STATUS_DISPLAY[status]}</span>
                 <span className={styles.count}>{column.length}</span>
                 {value > 0 && <span className={styles.sum}>{lei.format(value)} lei/lună</span>}
               </header>
-              <ul className={styles.cards}>
+              <ul className={styles.cards} data-list>
                 {column.map((card) => (
                   <li
                     key={card.id}
                     className={styles.card}
                     draggable
+                    data-dragging={dragging === card.id || undefined}
                     onDragStart={(e) => {
                       e.dataTransfer.setData("text/plain", String(card.id));
                       e.dataTransfer.effectAllowed = "move";
+                      setDragging(card.id);
+                    }}
+                    onDragEnd={() => {
+                      setDragging(null);
+                      setOver(null);
                     }}
                   >
                     <div className={styles.cardTop}>
@@ -114,11 +162,12 @@ export function Board({ cards }: { cards: Card[] }) {
                     )}
                     <select
                       className={styles.move}
-                      value={card.status}
-                      aria-label={`Mută ${card.name}`}
+                      value=""
+                      aria-label={`Mută ${card.name} în altă etapă`}
                       onChange={(e) => move(card.id, e.target.value as LeadStatus)}
                     >
-                      {LEAD_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
+                      <option value="" disabled>Mută în…</option>
+                      {LEAD_STATUSES.filter((x) => x !== card.status).map((x) => <option key={x} value={x}>{STATUS_DISPLAY[x]}</option>)}
                     </select>
                   </li>
                 ))}

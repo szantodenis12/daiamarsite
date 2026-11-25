@@ -17,10 +17,10 @@ const ICONS: Record<ActivityType, typeof Phone> = {
 export function Timeline({ activities, createdAt }: { activities: Activity[]; createdAt: string }) {
   return (
     <ol className={styles.timeline}>
-      {activities.map((a) => {
+      {activities.map((a, i) => {
         const Icon = ICONS[a.type] ?? NotebookPen;
         return (
-          <li key={a.id} data-type={a.type}>
+          <li key={a.id} data-type={a.type} style={{ "--i": Math.min(i, 8) } as React.CSSProperties}>
             <span className={styles.dot}><Icon aria-hidden size={14} /></span>
             <div>
               <p className={styles.entryHead}>

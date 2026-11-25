@@ -9,6 +9,7 @@ import { changeStatus, deleteLeadWithFiles, logActivity, mergeLeads } from "@/li
 import { getTeam } from "@/lib/settings";
 import { services } from "@/lib/site";
 import { currentAuthor, requireSession } from "../session";
+import { demoError, guarded, guardedVoid } from "./demo";
 import { day, id, lei, text, type FormState } from "./form";
 
 const refresh = () => revalidatePath("/admin", "layout");
@@ -33,7 +34,7 @@ async function contactFields(form: FormData) {
   return { values, errors };
 }
 
-export async function createLead(_: FormState, form: FormData): Promise<FormState> {
+export const createLead = guarded(async function createLead(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const { values, errors } = await contactFields(form);
   const source = form.get("source");
@@ -67,9 +68,9 @@ export async function createLead(_: FormState, form: FormData): Promise<FormStat
   }
   refresh();
   redirect(`/admin/leads/${leadId}/`);
-}
+}, demoError);
 
-export async function saveDetails(_: FormState, form: FormData): Promise<FormState> {
+export const saveDetails = guarded(async function saveDetails(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const leadId = id(form);
   const { values, errors } = await contactFields(form);
@@ -83,7 +84,7 @@ export async function saveDetails(_: FormState, form: FormData): Promise<FormSta
   });
   refresh();
   return { ok: true };
-}
+}, demoError);
 
 async function applyStatus(leadId: number, status: unknown, reason: unknown): Promise<string | null> {
   if (!isOneOf(LEAD_STATUSES, status)) return "Status necunoscut.";
@@ -94,7 +95,7 @@ async function applyStatus(leadId: number, status: unknown, reason: unknown): Pr
   return null;
 }
 
-export async function saveStatus(_: FormState, form: FormData): Promise<FormState> {
+export const saveStatus = guarded(async function saveStatus(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const leadId = id(form);
   if (!leadId) return { error: "Cerere necunoscută." };
@@ -103,19 +104,19 @@ export async function saveStatus(_: FormState, form: FormData): Promise<FormStat
   await db().updateLead(leadId, { notes: text(form, "notes", 4000) ?? "" });
   refresh();
   return { ok: true };
-}
+}, demoError);
 
 /** Used by the pipeline board, which moves cards without a form. */
-export async function moveLead(leadId: number, status: string, reason?: string): Promise<FormState> {
+export const moveLead = guarded(async function moveLead(leadId: number, status: string, reason?: string): Promise<FormState> {
   await requireSession();
   if (!Number.isInteger(leadId)) return { error: "Cerere necunoscută." };
   const error = await applyStatus(leadId, status, reason);
   if (error) return { error };
   refresh();
   return { ok: true };
-}
+}, demoError);
 
-export async function saveFollowUp(_: FormState, form: FormData): Promise<FormState> {
+export const saveFollowUp = guarded(async function saveFollowUp(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const leadId = id(form);
   const nextActionAt = day(form, "nextActionAt");
@@ -124,9 +125,9 @@ export async function saveFollowUp(_: FormState, form: FormData): Promise<FormSt
   await db().updateLead(leadId, { nextActionAt, nextAction: text(form, "nextAction", 200) ?? "" });
   refresh();
   return { ok: true };
-}
+}, demoError);
 
-export async function clearFollowUp(form: FormData) {
+export const clearFollowUp = guardedVoid(async function clearFollowUp(form: FormData) {
   await requireSession();
   const leadId = id(form);
   if (!leadId) return;
@@ -135,9 +136,9 @@ export async function clearFollowUp(form: FormData) {
   await db().updateLead(leadId, { nextActionAt: null, nextAction: "" });
   await db().insertActivity({ leadId, type: "nota", text: `Pas făcut: ${lead.nextAction || "follow-up"}.`, author: await currentAuthor() });
   refresh();
-}
+});
 
-export async function addActivity(_: FormState, form: FormData): Promise<FormState> {
+export const addActivity = guarded(async function addActivity(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const leadId = id(form);
   const type = form.get("type");
@@ -148,21 +149,21 @@ export async function addActivity(_: FormState, form: FormData): Promise<FormSta
   await logActivity({ leadId, type, text: body, author: await currentAuthor() });
   refresh();
   return { ok: true };
-}
+}, demoError);
 
-export async function mergeLead(form: FormData) {
+export const mergeLead = guardedVoid(async function mergeLead(form: FormData) {
   await requireSession();
   const [a, b] = await Promise.all([id(form), id(form, "other")].map((n) => (n ? db().getLead(n) : null)));
   if (!a || !b || a.id === b.id) return;
   const kept = await mergeLeads(a, b, await currentAuthor());
   refresh();
   redirect(`/admin/leads/${kept}/`);
-}
+});
 
-export async function deleteLead(form: FormData) {
+export const deleteLead = guardedVoid(async function deleteLead(form: FormData) {
   await requireSession();
   const leadId = id(form);
   if (leadId) await deleteLeadWithFiles(leadId);
   refresh();
   redirect("/admin/leads/");
-}
+});

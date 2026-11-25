@@ -3,6 +3,7 @@ import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Download, Mail, Phone } from "lucide-react";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
+import { isDemo } from "@/lib/demo";
 import { db } from "@/lib/db";
 import { recordView } from "@/lib/offer-store";
 import { formatLeiExact, offerTotals, shownStatus, validUntil, type OfferItem } from "@/lib/offers";
@@ -50,7 +51,7 @@ export default async function OnlineOffer({ params }: Props) {
   if (!offer || (offer.status === "ciorna" && !admin)) notFound();
 
   const agent = (await headers()).get("user-agent") ?? "";
-  if (!admin && !BOT.test(agent)) await recordView(offer);
+  if (!admin && !isDemo() && !BOT.test(agent)) await recordView(offer);
 
   const { doc } = offer;
   const totals = offerTotals(doc);

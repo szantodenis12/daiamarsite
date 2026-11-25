@@ -9,10 +9,10 @@ import styles from "./links.module.css";
 import admin from "../../admin.module.css";
 
 const UTM_FIELDS: { key: Exclude<keyof LinkFields, "page">; label: string; hint: string }[] = [
-  { key: "source", label: "Sursă (utm_source)", hint: "De unde vine: onrc, google, facebook" },
-  { key: "medium", label: "Mediu (utm_medium)", hint: "Tipul: print, cpc, paid_social, email" },
-  { key: "campaign", label: "Campanie (utm_campaign)", hint: "Numele campaniei: firme-noi" },
-  { key: "content", label: "Variantă (utm_content)", hint: "Opțional: flyer-a5, roland" },
+  { key: "source", label: "Sursa (ex. google, facebook)", hint: "De unde vine: onrc, google, facebook. Nume tehnic: utm_source" },
+  { key: "medium", label: "Tipul (ex. reclamă, email)", hint: "Tipul: print, cpc, paid_social, email. Nume tehnic: utm_medium" },
+  { key: "campaign", label: "Campania", hint: "Numele campaniei: firme-noi. Nume tehnic: utm_campaign" },
+  { key: "content", label: "Varianta", hint: "Opțional: flyer-a5, roland. Nume tehnic: utm_content" },
 ];
 
 const slug = (value: string) => value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9._-]/g, "");
@@ -63,11 +63,12 @@ export function LinkBuilder() {
       <aside className={styles.preview} aria-label="Previzualizare">
         {qr ? (
           <svg viewBox={`0 0 ${qr.size} ${qr.size}`} className={styles.qr} role="img" aria-label={`Cod QR pentru ${url}`} shapeRendering="crispEdges">
+            {/* QR codes stay dark on white in both themes so they scan. */}
             <rect width={qr.size} height={qr.size} fill="#fff" />
             <path d={qr.d} fill="#0f2742" />
           </svg>
         ) : (
-          <div className={styles.qrEmpty}>Completați sursa, mediul și campania</div>
+          <div className={styles.qrEmpty}>Completați sursa, tipul și campania</div>
         )}
         <code className={styles.url}>{url}</code>
         {ready && (

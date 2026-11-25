@@ -3,21 +3,26 @@
   padding: 0;
   border: 0;
   border-radius: 16px;
-  background: #fff;
-  color: #0f1b2d;
-  box-shadow: 0 24px 64px -24px rgba(15, 27, 45, 0.45);
+  background: var(--pop);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-pop);
 }
-.dialog::backdrop { background: rgba(15, 39, 66, 0.42); }
+.dialog::backdrop { background: var(--backdrop); animation: fade 0.18s ease-out; }
+@keyframes fade { from { opacity: 0; } }
 .dialog[open] { animation: enter 0.16s ease-out; }
 @keyframes enter { from { opacity: 0; transform: translateY(6px) scale(0.98); } }
-@media (prefers-reduced-motion: reduce) { .dialog[open] { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .dialog[open], .dialog::backdrop { animation: none; } }
 
 .body { display: grid; gap: 12px; padding: 22px; }
 .title { margin: 0; font-size: 18px; font-weight: 650; letter-spacing: -0.01em; }
-.text { margin: 0; font-size: 14px; color: #5b6676; }
+.text { margin: 0; font-size: 14px; color: var(--muted); }
 .buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 6px; }
-.buttons [data-tone="danger"] { background: #b4532a; }
-.buttons [data-tone="danger"]:hover { background: #963f1d; }
+.buttons [data-tone="danger"] { background: var(--warn-solid); color: var(--on-solid); }
+.buttons [data-tone="danger"]:hover { background: var(--warn-solid); filter: brightness(0.9); }
 .options { display: grid; gap: 6px; }
-.option { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid #e3e8ef; border-radius: 10px; font-size: 14px; cursor: pointer; }
-.option:has(input:checked) { border-color: #245482; background: #e9f1f9; }
+.option { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 10px; font-size: 14px; cursor: pointer; transition: border-color 0.15s, background-color 0.15s; }
+.option:hover { border-color: var(--line-hover); }
+.option input { accent-color: var(--brand); }
+.option:has(input:checked) { border-color: var(--brand); background: var(--tint); }
+.option:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }

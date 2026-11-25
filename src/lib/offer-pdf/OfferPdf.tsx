@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { Document, Font, Image, Page, StyleSheet, Text, View, renderToBuffer } from "@react-pdf/renderer";
 import type { Offer } from "@/lib/db";
@@ -6,8 +7,9 @@ import { company } from "@/lib/site";
 
 // path.join(process.cwd(), "...") with literal segments lets Vercel's file tracing ship these files with the function.
 const fontDir = path.join(process.cwd(), "src/lib/offer-pdf/fonts");
-// Same file as LOGO in lib/images.ts, written out so the tracer can see it; change both when the vector logo arrives.
-const logo = path.join(process.cwd(), "public/img/legacy/DAIAMAR-servicii-contabilitate-oradea.png");
+// react-pdf cannot draw SVG: this is public/img/daiamar-logo.svg (LOGO in lib/images.ts) rendered once to a 1800 px PNG.
+// Passed as bytes: a Windows drive path ("C:\...") is taken for a URL and the image silently does not load.
+const logo = { data: readFileSync(path.join(process.cwd(), "src/lib/offer-pdf/daiamar-logo.png")), format: "png" as const };
 
 Font.register({
   family: "Inter Tight",
@@ -30,8 +32,8 @@ const TINT = "#E9F1F9";
 
 const s = StyleSheet.create({
   page: { fontFamily: "Inter Tight", fontSize: 9.5, color: NAVY, paddingTop: 40, paddingBottom: 64, paddingHorizontal: 44, lineHeight: 1.45 },
-  head: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", paddingBottom: 18, borderBottomWidth: 2, borderBottomColor: BRAND },
-  logo: { width: 160, height: 19 },
+  head: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingBottom: 14, borderBottomWidth: 2, borderBottomColor: BRAND },
+  logo: { width: 170, height: 41 },
   headRight: { alignItems: "flex-end" },
   kicker: { fontSize: 8, fontWeight: 600, color: BRAND, letterSpacing: 1.2 },
   number: { fontSize: 18, fontWeight: 700, marginTop: 2, marginBottom: 4, lineHeight: 1.2 },

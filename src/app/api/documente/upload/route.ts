@@ -1,14 +1,16 @@
+import { isDemo } from "@/lib/demo";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
 import { blobEnabled } from "@/lib/storage";
 import { MAX_FILES } from "@/lib/upload";
 import { UploadRefused, uploadTokenOptions } from "@/lib/upload-token";
-import { crossSite, forbidden, rateLimited } from "../../request";
+import { crossSite, demoBlocked, forbidden, rateLimited } from "../../request";
 
 // Hands the browser a short-lived token to upload one file straight to the private Blob store, so the file never passes
 // through a Vercel function (they reject bodies over 4.5 MB). /api/documente/ then checks the stored files and files them.
 export async function POST(request: Request) {
   if (crossSite(request)) return forbidden();
+  if (isDemo()) return demoBlocked();
   if (!blobEnabled()) return NextResponse.json({ error: "Încărcarea directă nu este configurată." }, { status: 404 });
   if (rateLimited(request, "upload-token", 3 * MAX_FILES, 10 * 60_000)) {
     return NextResponse.json({ error: "Prea multe trimiteri. Încercați din nou peste câteva minute." }, { status: 429 });

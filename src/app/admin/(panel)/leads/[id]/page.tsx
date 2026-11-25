@@ -32,26 +32,26 @@ type Props = { params: Promise<{ id: string }> };
 
 function TouchDetails({ title, touch }: { title: string; touch: Touch | null }) {
   const { channel, detail } = classify(touch);
-  const rows: [string, string | undefined][] = touch
+  const rows: [string, string | undefined, string?][] = touch
     ? [
-        ["Canal", detail ? `${channel} (${detail})` : channel],
-        ["Sursă / mediu", touch.utm_source ? `${touch.utm_source} / ${touch.utm_medium ?? "-"}` : undefined],
-        ["Campanie", touch.utm_campaign],
-        ["Cuvânt cheie", touch.utm_term],
-        ["Conținut", touch.utm_content],
-        ["Click ID", [touch.gclid && "gclid", touch.gbraid && "gbraid", touch.wbraid && "wbraid", touch.fbclid && "fbclid", touch.msclkid && "msclkid", touch.li_fat_id && "li_fat_id"].filter(Boolean).join(", ") || undefined],
+        ["Sursă", detail ? `${channel} (${detail})` : channel],
+        ["Sursa din link", touch.utm_source ? `${touch.utm_source} / ${touch.utm_medium ?? "-"}` : undefined, "utm_source / utm_medium"],
+        ["Campanie", touch.utm_campaign, "utm_campaign"],
+        ["Cuvânt cheie", touch.utm_term, "utm_term"],
+        ["Varianta reclamei", touch.utm_content, "utm_content"],
+        ["Cod click reclamă", [touch.gclid && "gclid", touch.gbraid && "gbraid", touch.wbraid && "wbraid", touch.fbclid && "fbclid", touch.msclkid && "msclkid", touch.li_fat_id && "li_fat_id"].filter(Boolean).join(", ") || undefined, "gclid, fbclid"],
         ["Venit de pe", touch.referrer],
         ["Pagina de intrare", touch.landing],
         ["Data", formatDate(touch.at)],
       ]
-    : [["Canal", "Direct (fără date)"]];
+    : [["Sursă", "Direct (fără date)"]];
 
   return (
     <section className={styles.step}>
       <h3 className={styles.stepTitle}>{title}</h3>
       <dl className={admin.dl}>
-        {rows.filter(([, v]) => v).map(([k, v]) => (
-          <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
+        {rows.filter(([, v]) => v).map(([k, v, hint]) => (
+          <div key={k}><dt>{k}{hint && <small>{hint}</small>}</dt><dd>{v}</dd></div>
         ))}
       </dl>
     </section>
@@ -76,7 +76,7 @@ export default async function LeadPage({ params }: Props) {
       <div className={admin.pageHead}>
         <div>
           <p className={admin.kicker}>
-            #{lead.id} · {formatDate(lead.createdAt)} · {lead.channel}
+            #{lead.id} · {formatDate(lead.createdAt)} · Sursă: {lead.channel}
             {lead.referredBy && ` (de la ${lead.referredBy})`}
             {lead.demo && " · demo"}
           </p>
@@ -84,7 +84,7 @@ export default async function LeadPage({ params }: Props) {
           <div className={styles.headMeta}>
             <span className={admin.status} data-status={lead.status}>{STATUS_LABELS[lead.status]}</span>
             {lead.kind !== "cerere" && <span className={admin.chip} data-tone="brand">{LEAD_KIND_LABELS[lead.kind]}</span>}
-            {lead.suspect && <span className={admin.chip} data-tone="warn" title="Formularul a fost trimis mai repede decât îl poate completa un om. Cererea nu intră în rapoarte și conversii."><ShieldAlert aria-hidden size={12} /> Trimitere suspectă</span>}
+            {lead.suspect && <span className={admin.chip} data-tone="warn" title="Formularul a fost trimis mai repede decât îl poate completa un om. Cererea nu intră în rapoarte și conversii."><ShieldAlert aria-hidden size={12} /> Posibil spam</span>}
             {lead.status === "pierdut" && lead.lostReason && <span className={admin.chip}>{LOST_LABELS[lead.lostReason as LostReason] ?? lead.lostReason}</span>}
             {lead.company && <span className={admin.muted}>{lead.company}</span>}
             {lead.assignee && <span className={admin.chip} data-tone="brand">{lead.assignee}</span>}
@@ -124,7 +124,7 @@ export default async function LeadPage({ params }: Props) {
 
       <div className={styles.layout}>
         <div className={styles.column}>
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Istoric</h2>
             <ActionForm action={addActivity} submitLabel="Adaugă" className={styles.activityForm} resetOnSuccess>
               <input type="hidden" name="id" value={lead.id} />
@@ -144,7 +144,7 @@ export default async function LeadPage({ params }: Props) {
           </section>
 
           {offers.length > 0 && (
-            <section className={admin.card}>
+            <section className={admin.panel}>
               <h2 className={admin.h2}>Oferte</h2>
               <ul className={styles.offers}>
                 {offers.map((o) => {
@@ -162,7 +162,7 @@ export default async function LeadPage({ params }: Props) {
           )}
 
           {files.length > 0 && (
-            <section className={admin.card}>
+            <section className={admin.panel}>
               <h2 className={admin.h2}><Paperclip aria-hidden size={16} /> Documente</h2>
               <ul className={styles.files}>
                 {files.map((f) => (
@@ -180,7 +180,7 @@ export default async function LeadPage({ params }: Props) {
             </section>
           )}
 
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Cererea</h2>
             {lead.message ? <p className={styles.message}>{lead.message}</p> : <p className={admin.muted}>Fără mesaj.</p>}
             <dl className={`${admin.dl} ${styles.spaced}`}>
@@ -193,7 +193,7 @@ export default async function LeadPage({ params }: Props) {
         </div>
 
         <div className={styles.column}>
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Status</h2>
             <ActionForm action={saveStatus} submitLabel="Salvează" className={styles.stack}>
               <input type="hidden" name="id" value={lead.id} />
@@ -204,7 +204,7 @@ export default async function LeadPage({ params }: Props) {
             </ActionForm>
           </section>
 
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Următorul pas</h2>
             <ActionForm action={saveFollowUp} submitLabel="Programează" className={styles.stack}>
               <input type="hidden" name="id" value={lead.id} />
@@ -212,7 +212,7 @@ export default async function LeadPage({ params }: Props) {
             </ActionForm>
           </section>
 
-          <section className={admin.card}>
+          <section className={admin.panel}>
             <h2 className={admin.h2}>Detalii și valoare</h2>
             <ActionForm action={saveDetails} submitLabel="Salvează" className={styles.stack}>
               <input type="hidden" name="id" value={lead.id} />
@@ -231,7 +231,7 @@ export default async function LeadPage({ params }: Props) {
       </div>
 
       {!manual && (
-        <section className={`${admin.card} ${styles.journeyCard}`}>
+        <section className={`${admin.panel} ${styles.journeyCard}`}>
           <h2 className={admin.h2}>Drumul până la cerere</h2>
           <div className={styles.journey}>
             <TouchDetails title="1. Prima vizită" touch={lead.ft} />

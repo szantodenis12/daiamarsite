@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { SESSION_COOKIE } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { guardedVoid } from "./demo";
 import { removeFileByKey } from "@/lib/storage";
 import { getTeam } from "@/lib/settings";
 import { AUTHOR_COOKIE, requireSession } from "../session";
@@ -23,9 +24,9 @@ export async function setAuthor(formData: FormData) {
   revalidatePath("/admin", "layout");
 }
 
-export async function deleteDemoData() {
+export const deleteDemoData = guardedVoid(async function deleteDemoData() {
   await requireSession();
   for (const file of await db().demoFiles()) await removeFileByKey(file.key);
   await db().deleteDemo();
   revalidatePath("/admin", "layout");
-}
+});

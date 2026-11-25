@@ -131,7 +131,7 @@ export type StoredFileInput = {
 export type StoredFile = Required<StoredFileInput> & { id: number };
 
 export type Backend = {
-  kind: "neon" | "file";
+  kind: "neon" | "file" | "demo";
   insertLead(lead: LeadInput): Promise<number>;
   insertEvent(event: EventInput): Promise<void>;
   leadsSince(since: Date): Promise<Lead[]>;

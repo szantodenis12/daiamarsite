@@ -1,6 +1,6 @@
 import { services } from "@/lib/site";
 
-export { STATUS_LABELS } from "@/lib/crm";
+export { STATUS_DISPLAY as STATUS_LABELS } from "@/lib/crm";
 
 const dateTime = new Intl.DateTimeFormat("ro-RO", {
   timeZone: "Europe/Bucharest",

@@ -1,3 +1,4 @@
+import { isDemo } from "@/lib/demo";
 import { after, NextResponse } from "next/server";
 import { sanitizeTouch } from "@/lib/attribution";
 import { classify } from "@/lib/channel";
@@ -5,13 +6,14 @@ import { db, type LeadInput } from "@/lib/db";
 import { isSuspect } from "@/lib/form-token";
 import { validateLead } from "@/lib/lead";
 import { services } from "@/lib/site";
-import { crossSite, deviceFrom, forbidden, line, rateLimited, text, unavailable } from "../request";
+import { crossSite, demoBlocked, deviceFrom, forbidden, line, rateLimited, text, unavailable } from "../request";
 import { notifyNewLead } from "./notify";
 
 const MIN_FILL_MS = 3000;
 
 export async function POST(request: Request) {
   if (crossSite(request)) return forbidden();
+  if (isDemo()) return demoBlocked();
   if (rateLimited(request, "leads", 5, 10 * 60_000)) {
     return NextResponse.json({ error: "Prea multe cereri. Încercați din nou peste câteva minute." }, { status: 429 });
   }

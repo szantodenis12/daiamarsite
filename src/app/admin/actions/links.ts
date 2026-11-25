@@ -4,11 +4,12 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { LINK_PAGES } from "../links";
 import { requireSession } from "../session";
+import { demoError, guarded, guardedVoid } from "./demo";
 import { id, text, type FormState } from "./form";
 
 const UTM = /^[a-z0-9][a-z0-9._-]*$/;
 
-export async function saveLink(_: FormState, form: FormData): Promise<FormState> {
+export const saveLink = guarded(async function saveLink(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const values = {
     label: text(form, "label", 80),
@@ -30,11 +31,11 @@ export async function saveLink(_: FormState, form: FormData): Promise<FormState>
   await db().insertLink(values as { label: string; page: string; source: string; medium: string; campaign: string; content: string });
   revalidatePath("/admin/linkuri");
   return { ok: true };
-}
+}, demoError);
 
-export async function deleteLink(form: FormData) {
+export const deleteLink = guardedVoid(async function deleteLink(form: FormData) {
   await requireSession();
   const linkId = id(form);
   if (linkId) await db().deleteLink(linkId);
   revalidatePath("/admin/linkuri");
-}
+});

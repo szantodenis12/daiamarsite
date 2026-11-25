@@ -1,3 +1,4 @@
+import { isDemo } from "@/lib/demo";
 import { NextResponse } from "next/server";
 import { sanitizeTouch } from "@/lib/attribution";
 import { classify } from "@/lib/channel";
@@ -10,6 +11,7 @@ const isKind = (value: unknown): value is EventKind => EVENT_KINDS.includes(valu
 // (channel, landing page, campaign tags): no cookie is needed or set for it.
 export async function POST(request: Request) {
   if (crossSite(request)) return new NextResponse(null, { status: 403 });
+  if (isDemo()) return new NextResponse(null, { status: 204 });
   if (rateLimited(request, "events", 60, 60_000)) return new NextResponse(null, { status: 429 });
 
   let body: Record<string, unknown>;

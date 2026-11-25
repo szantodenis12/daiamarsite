@@ -1,3 +1,4 @@
+import { DEMO_MESSAGE, isDemo } from "@/lib/demo";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { currentAuthor, requireApiSession } from "@/app/admin/session";
@@ -10,6 +11,7 @@ const QUICK = { apel: "Apel inițiat din panou.", whatsapp: "Mesaj WhatsApp desc
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const denied = await requireApiSession();
   if (denied) return denied;
+  if (isDemo()) return NextResponse.json({ ok: false, demo: true, error: DEMO_MESSAGE });
   const leadId = Number((await params).id);
   const body: { type?: unknown } | null = await request.json().catch(() => null);
   const type = body?.type;

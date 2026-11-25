@@ -4,10 +4,11 @@ import { revalidatePath } from "next/cache";
 import { AD_CHANNELS } from "@/lib/crm";
 import { db } from "@/lib/db";
 import { requireSession } from "../session";
+import { demoError, guarded } from "./demo";
 import { lei, text, type FormState } from "./form";
 
 /** Saves one month: one amount per ad channel. An empty field removes that channel's amount. */
-export async function saveSpendMonth(_: FormState, form: FormData): Promise<FormState> {
+export const saveSpendMonth = guarded(async function saveSpendMonth(_: FormState, form: FormData): Promise<FormState> {
   await requireSession();
   const month = text(form, "month", 7);
   if (!month || !/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return { error: "Alegeți luna." };
@@ -17,4 +18,4 @@ export async function saveSpendMonth(_: FormState, form: FormData): Promise<Form
   for (const [key, amount] of amounts) await db().setSpend(month, key, amount ?? 0);
   revalidatePath("/admin", "layout");
   return { ok: true };
-}
+}, demoError);

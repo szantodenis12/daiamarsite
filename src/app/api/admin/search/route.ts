@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { normalizePhone, STATUS_LABELS } from "@/lib/crm";
+import { normalizePhone, STATUS_DISPLAY } from "@/lib/crm";
 import { requireApiSession } from "@/app/admin/session";
 import { db } from "@/lib/db";
 
@@ -20,6 +20,6 @@ export async function GET(request: Request) {
         Boolean(digits && l.phone?.replace(/\D/g, "").includes(digits.replace(/^0/, ""))),
     )
     .slice(0, 8)
-    .map((l) => ({ id: l.id, name: l.name, detail: l.company ?? l.phone ?? l.email ?? "", status: STATUS_LABELS[l.status] }));
+    .map((l) => ({ id: l.id, name: l.name, detail: l.company ?? l.phone ?? l.email ?? "", status: STATUS_DISPLAY[l.status] }));
   return NextResponse.json({ results });
 }

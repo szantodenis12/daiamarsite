@@ -29,7 +29,7 @@ export function LostReasonDialog({ leadName, onCancel, onConfirm }: Props) {
         }}
       >
         <h2 className={styles.title}>De ce s-a pierdut?</h2>
-        <p className={styles.text}>{leadName}. Motivul apare în raportul de pe Panou.</p>
+        <p className={styles.text}>{leadName}. Motivul apare în Rapoarte, la „De ce pierdem cereri”.</p>
         <div className={styles.options} role="radiogroup">
           {LOST_REASONS.map((r) => (
             <label key={r} className={styles.option}>

@@ -1,0 +1,79 @@
+/* Acasă dashboard layout. Panels, stat cards, pills and the activity list come from admin.module.css. */
+.kpis { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-bottom: 16px; }
+.rowCharts, .rowLists { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-bottom: 16px; }
+@media (min-width: 560px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) {
+  .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rowCharts { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  .plotRow { --plot-h: 300px; }
+  .rowLists { grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); align-items: start; }
+}
+
+#de-facut { scroll-margin-top: 90px; }
+
+/* ----- bar chart ----- */
+.chartTop { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--muted); }
+.legend li { display: inline-flex; align-items: center; gap: 6px; }
+.legend i, .tip i { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+
+.plotRow { --plot-h: 220px; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 8px; }
+.yAxis { display: flex; flex-direction: column; justify-content: space-between; height: var(--plot-h); margin-block: -7px; text-align: right; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.yAxis span { line-height: 14px; }
+.plot { position: relative; height: var(--plot-h); }
+.gridRow { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid var(--line); }
+.cols { position: absolute; inset: 0; display: flex; gap: 0; }
+.col { position: relative; flex: 1 1 0; min-width: 0; padding: 0; border: 0; background: none; cursor: default; }
+.col:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; border-radius: 10px; }
+.barSoft, .barStrong { position: absolute; bottom: 0; left: 50%; width: min(70%, 44px); transform: translateX(-50%); border-radius: 9px 9px 4px 4px; transition: filter 0.15s; transform-origin: bottom; animation: growY 0.7s var(--ease) both; animation-delay: calc(var(--i, 0) * 55ms + 150ms); }
+.barStrong { animation-delay: calc(var(--i, 0) * 55ms + 300ms); }
+.barSoft { background: var(--bar-soft); transform-origin: bottom; }
+.barStrong { background: linear-gradient(180deg, var(--bar-strong-top), var(--bar-strong)); }
+.col[data-active] .barStrong { filter: brightness(0.9); }
+.col[data-active] .barSoft { filter: brightness(0.96); }
+.tip { position: absolute; z-index: 5; transform: translateX(-50%); display: grid; gap: 5px; min-width: 150px; padding: 10px 12px; background: var(--pop); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-pop); font-size: 12.5px; color: var(--muted); pointer-events: none; animation: tipIn 0.15s ease-out both; }
+@keyframes tipIn { from { opacity: 0; } }
+.tip[data-edge="start"] { transform: translateX(-30%); }
+.tip[data-edge="end"] { transform: translateX(-70%); }
+.tip strong { color: var(--ink); font-size: 13px; text-transform: capitalize; }
+.tip span { display: flex; align-items: center; gap: 6px; }
+.tip b { margin-left: auto; padding-left: 12px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.xRow { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 8px; margin-top: 8px; }
+.xRow div { display: flex; }
+.xRow div span { flex: 1 1 0; min-width: 0; text-align: center; font-size: 12px; color: var(--muted); text-transform: capitalize; }
+
+/* ----- donut ----- */
+.donutBox { position: relative; width: min(100%, 210px); margin: 4px auto 18px; }
+.donutBox svg { display: block; width: 100%; height: auto; }
+.arc { animation: donutDraw 0.9s var(--ease) both; animation-delay: calc(var(--i, 0) * 120ms + 200ms); }
+@keyframes donutDraw { from { stroke-dasharray: 0.1 var(--c); } to { stroke-dasharray: var(--dash) var(--c); } }
+.donutCentre { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; }
+.donutCentre span { font-size: 12px; color: var(--muted); }
+.donutCentre strong { font-size: 26px; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.donutLegend { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+.donutLegend li { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto 44px; align-items: center; gap: 10px; font-size: 13.5px; }
+.donutLegend i { width: 8px; height: 8px; border-radius: 999px; }
+.legendName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legendValue { color: var(--muted); font-variant-numeric: tabular-nums; }
+.donutLegend b { text-align: right; font-weight: 650; font-variant-numeric: tabular-nums; }
+.donutNote { margin-top: 14px; text-align: center; }
+
+/* ----- to-do list ----- */
+.todoList { max-height: 560px; overflow-y: auto; padding-right: 2px; }
+.rowActions { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+.rowActions form { margin: 0; }
+.panelNote { margin-top: 14px; font-size: 12.5px; color: var(--muted); }
+
+/* ----- recent requests table ----- */
+.who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.initial { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 10px; background: var(--tint); color: var(--brand); font-size: 13px; font-weight: 700; }
+.whoName { display: block; font-weight: 600; text-decoration: none; }
+.whoName:hover { color: var(--brand); }
+.whoCompany { display: block; font-size: 12px; }
+
+@keyframes growY { from { transform: translateX(-50%) scaleY(0); } to { transform: translateX(-50%) scaleY(1); } }
+@media (min-width: 1100px) { .plotRow { --plot-h: 300px; } }
+.cellSub { display: block; font-size: 12px; color: var(--muted); }
+.cellWrap { white-space: normal; min-width: 120px; }
+.recent th, .recent td { padding-inline: 8px; }
+.recent th:first-child, .recent td:first-child { padding-left: 4px; }
